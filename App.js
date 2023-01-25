@@ -16,8 +16,9 @@ export default function App() {
           component={SignupScreen}
           options={{
             title: 'Sign Up',
+            headerTitleAlign: 'center',
             headerStyle: {
-              backgroundColor: "#222f3e",
+              backgroundColor: "rgba(0,0,0,0.8)",
             },
             headerTintColor: "#fff",
 
