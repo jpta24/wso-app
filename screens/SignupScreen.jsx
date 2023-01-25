@@ -1,7 +1,8 @@
 import React from 'react'
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, Text, View, Image, TextInput,TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, TextInput,TouchableOpacity, FlatList } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
 import axios from 'axios';
 
@@ -19,22 +20,41 @@ const SignupScreen = () => {
     password:''
   })
 
+  const storeData = async () => {
+    try {
+      await AsyncStorage.setItem('hasSigned', 'true')
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  
+const getData = async () => {
+  try {
+    const value = await AsyncStorage.getItem('hasSigned')
+    if(value === 'true') {
+      navigation.navigate('LoginScreen');
+    }
+    return value
+    
+  } catch(e) {
+    console.log(e);
+  }
+}
+
+const removeValue = async () => {
+  try {
+    await AsyncStorage.removeItem('hasSigned')
+  } catch(e) {
+    console.log(e);
+  }
+}
+
+getData()
+// removeValue()
+  
 	const [errorMessage, setErrorMessage] = useState(undefined);
 
   const handleChange = (name, value) => setSignup({ ...signup, [name]: value });
-
-  const handletest =()=>{
-    axios
-			.get(`${SERVER_URL}/test`)
-			.then((response) => {
-				console.log(response.data);
-			})
-			.catch((error) => {
-        console.log(error);
-				// const errorDescription = error.response.data.message;
-				// setErrorMessage(errorDescription);
-			});
-  }
 
   const handleSignupSubmit = () => {
     const { username, password, email } = signup
@@ -46,13 +66,12 @@ const SignupScreen = () => {
 		axios
 			.post(`${SERVER_URL}/auth/signup`, requestBody)
 			.then((response) => {
+        storeData()
 				navigation.navigate('LoginScreen');
 			})
 			.catch((error) => {
-        // console.log(JSON.stringify(error));
-				// const errorDescription = error.response.data.message;
-        // console.log(errorDescription);
-				// setErrorMessage(errorDescription);
+				const errorDescription = error.response.data.message;
+				setErrorMessage(errorDescription);
 			});
 	};
 
