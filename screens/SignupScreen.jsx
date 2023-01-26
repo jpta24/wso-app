@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, Text, View, Image, TextInput,TouchableOpacity, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Image, TextInput,TouchableOpacity} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
 import axios from 'axios';
@@ -28,29 +28,29 @@ const SignupScreen = () => {
     }
   }
   
-const getData = async () => {
-  try {
-    const value = await AsyncStorage.getItem('hasSigned')
-    if(value === 'true') {
-      navigation.navigate('LoginScreen');
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('hasSigned')
+      if(value === 'true') {
+        navigation.navigate('LoginScreen');
+      }
+      return value
+      
+    } catch(e) {
+      console.log(e);
     }
-    return value
-    
-  } catch(e) {
-    console.log(e);
   }
-}
 
-const removeValue = async () => {
-  try {
-    await AsyncStorage.removeItem('hasSigned')
-  } catch(e) {
-    console.log(e);
+  const removeValue = async () => {
+    try {
+      await AsyncStorage.removeItem('hasSigned')
+    } catch(e) {
+      console.log(e);
+    }
   }
-}
 
-getData()
-// removeValue()
+  getData()
+  // removeValue()
   
 	const [errorMessage, setErrorMessage] = useState(undefined);
 
@@ -74,6 +74,10 @@ getData()
 				setErrorMessage(errorDescription);
 			});
 	};
+
+  const hadleToLogin = () => {
+    navigation.navigate('LoginScreen')
+  }
 
   return (
     <Layout>
@@ -114,7 +118,7 @@ getData()
         <TouchableOpacity style={styles.button} onPress={handleSignupSubmit} >
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.link} >
+        <TouchableOpacity style={styles.link} onPress={hadleToLogin} >
           <Text style={styles.linkText}>Already have an account? Log In</Text>
         </TouchableOpacity>
       </View>
