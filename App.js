@@ -8,6 +8,7 @@ import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
 import TestScreen from "./screens/TestScreen";
 import Dashboard from "./screens/Dashboard";
+import ProfileScreen from "./screens/ProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,12 +24,12 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Dashboard">
+      <Stack.Navigator initialRouteName="CreateProfileScreen">
         <Stack.Screen
-          name="Dashboard"
-          component={Dashboard}
+          name="CreateProfileScreen"
+          component={ProfileScreen}
           options={{
-            title: 'Dashboard',
+            title: 'Create Profile',
             headerTitleAlign: 'center',
             headerStyle: {
               backgroundColor: "rgba(0,0,0,0.8)",
@@ -38,14 +39,6 @@ export default function App() {
             headerTitleStyle: {
               color: "#ffffff",
             },
-            // headerRight:() => (
-            //   <TouchableOpacity 
-            //   style={styles.logoutButton} 
-            //   onPress={() => navigation.navigate("LoginScreen")}
-            //    >
-            //     <Text style={styles.logoutButtonText}>Log Out</Text>
-            //   </TouchableOpacity>
-            // )
           }}
         />
         <Stack.Screen
@@ -113,6 +106,31 @@ export default function App() {
             },
           }}
         />
+        <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{
+            title: 'Dashboard',
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: "rgba(0,0,0,0.8)",
+            },
+            headerTintColor: "#fff",
+
+            headerTitleStyle: {
+              color: "#ffffff",
+            },
+            // headerRight:() => (
+            //   <TouchableOpacity 
+            //   style={styles.logoutButton} 
+            //   onPress={() => navigation.navigate("LoginScreen")}
+            //    >
+            //     <Text style={styles.logoutButtonText}>Log Out</Text>
+            //   </TouchableOpacity>
+            // )
+          }}
+        />
+        
     </NavigationContainer>
   );
 }
