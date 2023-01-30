@@ -6,6 +6,8 @@ import userIcon from "../assets/userIcon.png";
 import businessIcon from "../assets/businessIcon.png";
 
 const Dashboard = ({navigation}) => {
+    // ADD USEEFFECT TO GET USER INFO
+    // ADD ROUTE PARAMS USER TO CREATE PROFILE AND BUSINESS
   return (
     <Layout>
         <View style={styles.container}>

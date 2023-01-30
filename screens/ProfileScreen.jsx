@@ -17,13 +17,14 @@ import Layout from '../components/Layout'
 import userIcon from "../assets/userIcon.png";
 import CheckboxProfile from '../components/CheckboxProfile';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({navigation}) => {
+    //SET USER WITH PARAMS AND FIX SUBMIT ROUTE WITH ID
+
     const phoneRef = useRef()
     const countryRef = useRef()
-    const [isChecked, setChecked] = useState(false);
     const [user,setUser] = useState({
-        email:'',
-        username:'',
+        // email:'',
+        // username:'',
         fullName:'',
         phone:'',
         country:'',
@@ -33,12 +34,30 @@ const ProfileScreen = () => {
             protectionOfficer:false,
             driver:false,
             intempreter:false
-        },
-        capacities:[]
+        }
       })
     
     const handleChange = (name, value) => setUser({ ...user, [name]: value });
     const handleCheckboxChange = (name, value) => setUser({ ...user, experience:{...user.experience, [name]: value} });
+    const storedToken = async () => {
+        try {
+          const token = await AsyncStorage.getItem('authToken')
+          return token
+          
+        } catch(e) {
+          console.log(e);
+        }
+      }
+
+    const handleCreateProfileSubmit = () => {
+        const token = storedToken()
+        const requestBody = user;
+
+        axios.post(`${SERVER_URL}/users`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
+        .then(res => {
+            navigation.navigate('Dashboard')})
+      .catch(err=>console.log(err));
+    }
 
     const openImagePickerAsync = async (field) => {
         const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -155,7 +174,7 @@ const ProfileScreen = () => {
                     })}
                     </View>
                 </View>
-                <TouchableOpacity style={styles.button}  >
+                <TouchableOpacity style={styles.button} onPress={handleCreateProfileSubmit} >
                     <Text style={styles.buttonText}>Create Profile</Text>
                 </TouchableOpacity>
                 

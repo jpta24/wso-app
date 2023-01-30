@@ -13,6 +13,7 @@ import icon from "../assets/wso-logo.png";
 import Layout from "../components/Layout";
 
 const LoginScreen = () => {
+    // ADD ROUTE PARAMS  USER ID TO DASHBOARD
     const navigation = useNavigation();
     const [signup, setSignup] = useState({
       username:'',
