@@ -1,7 +1,11 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ImageViewer } from 'react-native'
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { useState } from "react";
+import Checkbox from 'expo-checkbox';
+import { useState, useRef } from "react";
 import * as ImagePicker from "expo-image-picker";
+import axios from 'axios';
+
+import {SERVER_URL} from "@env";
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
@@ -11,23 +15,32 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Layout from '../components/Layout'
 
 import userIcon from "../assets/userIcon.png";
+import CheckboxProfile from '../components/CheckboxProfile';
 
 const ProfileScreen = () => {
-    const [selectedImage, setSelectedImage] = useState(null);
+    const phoneRef = useRef()
+    const countryRef = useRef()
+    const [isChecked, setChecked] = useState(false);
     const [user,setUser] = useState({
         email:'',
         username:'',
         fullName:'',
         phone:'',
         country:'',
-        picture:'',
-        experience:[],
+        pictureUrl:'',
+        experience:{
+            coordinator:false,
+            protectionOfficer:false,
+            driver:false,
+            intempreter:false
+        },
         capacities:[]
       })
     
-    const handleChange = (name, value) => setSignup({ ...user, [name]: value });
+    const handleChange = (name, value) => setUser({ ...user, [name]: value });
+    const handleCheckboxChange = (name, value) => setUser({ ...user, experience:{...user.experience, [name]: value} });
 
-    const openImagePickerAsync = async () => {
+    const openImagePickerAsync = async (field) => {
         const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     
         if (permissionResult.granted === false) {
@@ -38,25 +51,31 @@ const ProfileScreen = () => {
         const pickerResult = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
             quality: 1,
+            aspect: [2, 2],
           });
         // console.log(pickerResult)
     
         if (!pickerResult.canceled) {
-            setUser({...user,picture:pickerResult.assets[0].uri});
+            const form = new FormData()
+            form.append('imageUrl', {
+            uri : pickerResult.assets[0].uri,
+            type: pickerResult.assets[0].type + '/jpeg',
+            name: 'name'
+            });
+            axios.post(`${SERVER_URL}/api/upload`, form, {
+                headers: {Accept: 'application/json',
+                  'Content-Type': 'multipart/form-data'
+                },
+              })
+            .then(res => {
+                setUser({...user, [field]:res.data.fileUrl})})
+          .catch(err=>console.log(err));
         } else {
             alert('You did not select any image.');
         }
-    
-        // if (Platform.OS === "web") {
-        //   let remoteUri = await uploadAnonymousFilesAsync(pickerResult.uri);
-        //   setSelectedImage({ localUri: pickerResult.uri, remoteUri });
-        // } else {
-        //   setSelectedImage({ localUri: pickerResult.uri });
-        // }
       };
-
-      const imageSource = user.picture !== ''
-    ? { uri: user.picture }
+      const imageSource = user.pictureUrl !== ''
+    ? { uri: user.pictureUrl }
     : userIcon;
 
     return (
@@ -67,7 +86,7 @@ const ProfileScreen = () => {
                     style={styles.image}
                 />
                 
-                <TouchableOpacity style={styles.btnImg} onPress={openImagePickerAsync} >
+                <TouchableOpacity style={styles.btnImg} onPress={()=>openImagePickerAsync('pictureUrl')} >
                     <Text style={styles.btnImgText}>Change Image</Text>
                 </TouchableOpacity>
                 <View style={styles.fields}>
@@ -75,11 +94,14 @@ const ProfileScreen = () => {
                     <TextInput
                     style={styles.textInput}
                     placeholder='Full Name'
+                    returnKeyType='next'
+                    onSubmitEditing={()=>{phoneRef.current.focus()}}
+                    blurOnSubmit={false}
                     placeholderTextColor='#fffff'
                     onChangeText={(text) => handleChange("fullName", text)}
                     />
                 </View>
-                <View style={styles.fields}>
+                {/* <View style={styles.fields}>
                     <Feather name="user" size={30} color="black" />
                     <TextInput
                     style={styles.textInput}
@@ -97,7 +119,7 @@ const ProfileScreen = () => {
                     keyboardType='email-address'
                     onChangeText={(text) => handleChange("email", text)}
                     />
-                </View>
+                </View> */}
                 <View style={styles.fields}>
                     <Entypo name="mobile" size={30} color="black" />
                     <TextInput
@@ -106,6 +128,10 @@ const ProfileScreen = () => {
                     placeholderTextColor='#fffff'
                     keyboardType='phone-pad'
                     onChangeText={(text) => handleChange("phone", text)}
+                    returnKeyType='next'
+                    onSubmitEditing={()=>{countryRef.current.focus()}}
+                    blurOnSubmit={false}
+                    ref={phoneRef}
                     />
                 </View>
                 <View style={styles.fields}>
@@ -115,8 +141,23 @@ const ProfileScreen = () => {
                     placeholder='Country'
                     placeholderTextColor='#fffff'
                     onChangeText={(text) => handleChange("country", text)}
+                    ref={countryRef}
                     />
                 </View>
+                <View style={styles.fields}>
+                    <Feather name="star" size={30} color="black" />
+                    <Text style={styles.textTitleField}>
+                        Experience
+                    </Text>
+                    <View style={styles.CheckboxList}>
+                        {Object.keys(user.experience).sort((a,b)=>a.localeCompare(b)).map(elem => {
+                        return <CheckboxProfile key={elem} user={user} field={elem} handleCheckboxChange={handleCheckboxChange}/>
+                    })}
+                    </View>
+                </View>
+                <TouchableOpacity style={styles.button}  >
+                    <Text style={styles.buttonText}>Create Profile</Text>
+                </TouchableOpacity>
                 
             </View>
         </Layout>
@@ -130,7 +171,6 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent:'center',
         alignItems:'center',
-        paddingBottom:50
       },
       image:{
         width:150,
@@ -139,7 +179,8 @@ const styles = StyleSheet.create({
       },
       fields:{
         width:'100%',
-        height:50,
+        minHeight:50,
+        height:'auto',
         paddingStart:20,
         paddingEnd:20,
         paddingTop:5,
@@ -164,5 +205,24 @@ const styles = StyleSheet.create({
         display:'flex',
         alignItems:'center',
         borderRadius:5,
+      },
+      textTitleField:{
+        paddingStart:20,
+        paddingEnd:20,
+        fontSize:17,
+        paddingBottom:8
+      },
+      button:{
+        marginTop:20,
+        width:'80%',
+        backgroundColor:'#CC302D',
+        paddingVertical:20,
+        display:'flex',
+        alignItems:'center',
+        borderRadius:10,
+      },
+      buttonText:{
+        fontSize:17,
+        color:'#ffff'
       },
 })
