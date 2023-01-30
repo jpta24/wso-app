@@ -24,12 +24,18 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="CreateProfileScreen">
-        <Stack.Screen
-          name="CreateProfileScreen"
-          component={ProfileScreen}
-          options={{
-            title: 'Create Profile',
+      <Stack.Navigator initialRouteName="Dashboard">
+      <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={({ navigation }) => ({
+            title: "Dashboard",
+            headerStyle: {
+              backgroundColor: "#222f3e",
+            },
+            headerTitleStyle: {
+              color: "#ffffff",
+            },
             headerTitleAlign: 'center',
             headerStyle: {
               backgroundColor: "rgba(0,0,0,0.8)",
@@ -39,7 +45,49 @@ export default function App() {
             headerTitleStyle: {
               color: "#ffffff",
             },
-          }}
+            headerRight:() => (
+              <TouchableOpacity 
+              style={styles.logoutButton} 
+              onPress={() =>{
+                removeToken()
+                navigation.navigate("LoginScreen")}}
+               >
+                <Text style={styles.logoutButtonText}>Log Out</Text>
+              </TouchableOpacity>
+            )
+          })}
+        />
+        <Stack.Screen
+          name="CreateProfileScreen"
+          component={ProfileScreen}
+          options={({ navigation }) => ({
+            title: "Create Profile",
+            headerStyle: {
+              backgroundColor: "#222f3e",
+            },
+            headerTitleStyle: {
+              color: "#ffffff",
+            },
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: "rgba(0,0,0,0.8)",
+            },
+            headerTintColor: "#fff",
+
+            headerTitleStyle: {
+              color: "#ffffff",
+            },
+            headerRight:() => (
+              <TouchableOpacity 
+              style={styles.logoutButton} 
+              onPress={() =>{
+                removeToken()
+                navigation.navigate("LoginScreen")}}
+               >
+                <Text style={styles.logoutButtonText}>Log Out</Text>
+              </TouchableOpacity>
+            )
+          })}
         />
         <Stack.Screen
           name="SignupScreen"
@@ -90,47 +138,6 @@ export default function App() {
           }}
         />
       </Stack.Navigator>
-      <Stack.Screen
-          name="Dashboard"
-          component={Dashboard}
-          options={{
-            title: 'Sign Up',
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: "rgba(0,0,0,0.8)",
-            },
-            headerTintColor: "#fff",
-
-            headerTitleStyle: {
-              color: "#ffffff",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="Dashboard"
-          component={Dashboard}
-          options={{
-            title: 'Dashboard',
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: "rgba(0,0,0,0.8)",
-            },
-            headerTintColor: "#fff",
-
-            headerTitleStyle: {
-              color: "#ffffff",
-            },
-            // headerRight:() => (
-            //   <TouchableOpacity 
-            //   style={styles.logoutButton} 
-            //   onPress={() => navigation.navigate("LoginScreen")}
-            //    >
-            //     <Text style={styles.logoutButtonText}>Log Out</Text>
-            //   </TouchableOpacity>
-            // )
-          }}
-        />
-        
     </NavigationContainer>
   );
 }

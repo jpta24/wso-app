@@ -5,16 +5,16 @@ import Layout from '../components/Layout'
 import userIcon from "../assets/userIcon.png";
 import businessIcon from "../assets/businessIcon.png";
 
-const Dashboard = () => {
+const Dashboard = ({navigation}) => {
   return (
     <Layout>
         <View style={styles.container}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('CreateProfileScreen')}>
                 <Image
                     source={userIcon}
                     style={styles.image}
                 />
-                <Text style={styles.buttonText}>Go to Profile</Text>
+                <Text style={styles.buttonText}>Create a Personal Profile</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button}  >
@@ -22,7 +22,7 @@ const Dashboard = () => {
                     source={businessIcon}
                     style={styles.image}
                 />
-                <Text style={styles.buttonText}>Go to Business</Text>
+                <Text style={styles.buttonText}>Create a Business</Text>
             </TouchableOpacity>
         </View>
     </Layout>
