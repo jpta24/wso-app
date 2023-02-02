@@ -1,7 +1,5 @@
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
-import React from 'react'
-import Checkbox from 'expo-checkbox';
-import { useState, useRef } from "react";
+import React, { useState, useRef }  from 'react'
 import * as ImagePicker from "expo-image-picker";
 import axios from 'axios';
 

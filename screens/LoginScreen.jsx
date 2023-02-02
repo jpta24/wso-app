@@ -1,9 +1,8 @@
-import React from 'react'
-import { useState } from "react";
+import React, { useState, useContext } from 'react'
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, Image, TextInput,TouchableOpacity} from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
+import { AuthContext } from "../context/auth.context";
 import axios from 'axios';
 
 import {SERVER_URL} from "@env";
@@ -13,6 +12,7 @@ import icon from "../assets/wso-logo.png";
 import Layout from "../components/Layout";
 
 const LoginScreen = () => {
+    const { storeToken, authenticateUser} = useContext(AuthContext);
     // ADD ROUTE PARAMS  USER ID TO DASHBOARD
     const navigation = useNavigation();
     const [signup, setSignup] = useState({
@@ -20,13 +20,13 @@ const LoginScreen = () => {
       password:''
     })
   
-    const storeToken = async (token) => {
-      try {
-        await AsyncStorage.setItem('authToken', token)
-      } catch (e) {
-        console.log(e);
-      }
-    }
+    // const storeToken = async (token) => {
+    //   try {
+    //     await AsyncStorage.setItem('authToken', token)
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // }
     
     // const getData = async () => {
     //   try {
@@ -51,11 +51,12 @@ const LoginScreen = () => {
   
     // getData()
     // removeValue()
+    // console.log({isLoggedIn});
     
-      const [errorMessage, setErrorMessage] = useState(undefined);
+    const [errorMessage, setErrorMessage] = useState(undefined);
   
     const handleChange = (name, value) => setSignup({ ...signup, [name]: value });
-  
+
     const handleLoginSubmit = () => {
       const { username, password } = signup
   
@@ -67,7 +68,7 @@ const LoginScreen = () => {
               .post(`${SERVER_URL}/auth/login`, requestBody)
               .then((response) => {
                 storeToken(response.data.authToken)
-                navigation.navigate('TestScreen');
+                authenticateUser()
               })
               .catch((error) => {
                   const errorDescription = error.response.data.message;

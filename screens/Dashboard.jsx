@@ -1,35 +1,45 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+
+import { useContext } from "react";
+import { AuthContext } from "../context/auth.context";
+
 import Layout from '../components/Layout'
 
 import userIcon from "../assets/userIcon.png";
 import businessIcon from "../assets/businessIcon.png";
 
 const Dashboard = ({navigation}) => {
-    // ADD USEEFFECT TO GET USER INFO
-    // ADD ROUTE PARAMS USER TO CREATE PROFILE AND BUSINESS
-  return (
-    <Layout>
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('CreateProfileScreen')}>
-                <Image
-                    source={userIcon}
-                    style={styles.image}
-                />
-                <Text style={styles.buttonText}>Create a Personal Profile</Text>
-            </TouchableOpacity>
+    const { user,logOutUser } = useContext(AuthContext);
 
-            <TouchableOpacity style={styles.button}  >
-                <Image
-                    source={businessIcon}
-                    style={styles.image}
-                />
-                <Text style={styles.buttonText}>Create a Business</Text>
-            </TouchableOpacity>
-        </View>
-    </Layout>
-  )
-}
+   return (
+        <Layout>
+            <View style={styles.container}>
+                <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('CreateProfileScreen')}>
+                    <Image
+                        source={userIcon}
+                        style={styles.image}
+                    />
+                    <Text style={styles.buttonText}>Create a Personal Profile</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button}  >
+                    <Image
+                        source={businessIcon}
+                        style={styles.image}
+                    />
+                    <Text style={styles.buttonText}>Create a Business</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonSO} onPress={logOutUser} >
+                    <Text style={styles.buttonText}>Log Out</Text>
+                </TouchableOpacity>
+            </View>
+            
+        </Layout>
+    )
+  }
+  
+// }
 
 export default Dashboard
 
@@ -56,5 +66,14 @@ const styles = StyleSheet.create({
         width:250,
         height:250,
         borderRadius:10
+      },
+      buttonSO:{
+        marginTop:20,
+        paddingHorizontal:40,
+        backgroundColor:'#CC302D',
+        paddingVertical:10,
+        display:'flex',
+        alignItems:'center',
+        borderRadius:10,
       },
 })

@@ -1,18 +1,20 @@
-import React from 'react'
-import { useState } from "react";
+import React, { useState,useContext }  from 'react'
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, Image, TextInput,TouchableOpacity} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
 import axios from 'axios';
 
-import {SERVER_URL} from "@env";
+import {  AuthContext } from '../context/auth.context';
 
-import icon from "../assets/wso-logo.png";
+import {SERVER_URL} from "@env";
 
 import Layout from "../components/Layout";
 
+import icon from "../assets/wso-logo.png";
+
 const SignupScreen = () => {
+  const { setHasSigned } = useContext(AuthContext);
   const navigation = useNavigation();
   const [signup, setSignup] = useState({
     email:'',
@@ -20,7 +22,7 @@ const SignupScreen = () => {
     password:''
   })
 
-  const storeData = async () => {
+  const storeHasSigned = async () => {
     try {
       await AsyncStorage.setItem('hasSigned', 'true')
     } catch (e) {
@@ -28,11 +30,10 @@ const SignupScreen = () => {
     }
   }
   
-  const getData = async () => {
+  const getHasSigned = async () => {
     try {
       const value = await AsyncStorage.getItem('hasSigned')
       if(value === 'true') {
-        navigation.navigate('LoginScreen');
       }
       return value
       
@@ -44,12 +45,13 @@ const SignupScreen = () => {
   const removeValue = async () => {
     try {
       await AsyncStorage.removeItem('hasSigned')
+      setHasSigned(false)
     } catch(e) {
       console.log(e);
     }
   }
 
-  getData()
+  // getHasSigned()
   // removeValue()
   
 	const [errorMessage, setErrorMessage] = useState(undefined);
@@ -66,8 +68,8 @@ const SignupScreen = () => {
 		axios
 			.post(`${SERVER_URL}/auth/signup`, requestBody)
 			.then((response) => {
-        storeData()
-				navigation.navigate('LoginScreen');
+        storeHasSigned()
+        setHasSigned(true)
 			})
 			.catch((error) => {
 				const errorDescription = error.response.data.message;
