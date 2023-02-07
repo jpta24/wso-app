@@ -1,25 +1,33 @@
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
-import React, { useState, useRef }  from 'react'
+import React, { useState, useRef, useEffect,useContext }  from 'react'
 import * as ImagePicker from "expo-image-picker";
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {SERVER_URL} from "@env";
+import { AuthContext } from "../context/auth.context";
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 import Layout from '../components/Layout'
 
 import userIcon from "../assets/userIcon.png";
 import CheckboxProfile from '../components/CheckboxProfile';
+import { SelectList } from 'react-native-dropdown-select-list'
 
-const ProfileScreen = ({navigation}) => {
+const CreateProfileScreen = ({navigation}) => {
     //SET USER WITH PARAMS AND FIX SUBMIT ROUTE WITH ID
+    
+    const { user:userID} = useContext(AuthContext);
 
     const phoneRef = useRef()
     const countryRef = useRef()
+    const [businesses, setBusinesses] = useState([])
+    const [errorMessage, setErrorMessage] = useState(undefined);
     const [user,setUser] = useState({
         // email:'',
         // username:'',
@@ -32,7 +40,8 @@ const ProfileScreen = ({navigation}) => {
             protectionOfficer:false,
             driver:false,
             intempreter:false
-        }
+        },
+        businessID:''
       })
     
     const handleChange = (name, value) => setUser({ ...user, [name]: value });
@@ -47,11 +56,18 @@ const ProfileScreen = ({navigation}) => {
         }
       }
 
-    const handleCreateProfileSubmit = () => {
-        const token = storedToken()
+    const handleCreateProfileSubmit = async () => {
+        if (user.fullName === '' || user.phone === '' || user.country === '' ) {
+            setErrorMessage('Please fill all fields')
+            return
+        }
+        if (user.experience.coordinator===false && user.experience.protectionOfficer===false && user.experience.driver===false && user.experience.intempreter===false) {
+            setErrorMessage('Please select at least one Experience')
+            return
+        }
         const requestBody = user;
-
-        axios.post(`${SERVER_URL}/users`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
+        const token = await AsyncStorage.getItem('authToken')
+        axios.post(`${SERVER_URL}/users/updateUser/${userID._id}`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
         .then(res => {
             navigation.navigate('Dashboard')})
       .catch(err=>console.log(err));
@@ -95,6 +111,32 @@ const ProfileScreen = ({navigation}) => {
     ? { uri: user.pictureUrl }
     : userIcon;
 
+    const getBusinesses = async ()=>{
+        const token = await AsyncStorage.getItem('authToken')
+        axios.get(`${SERVER_URL}/business`,{headers: {Authorization: `Bearer ${token}`}})
+        .then(response =>{
+            const data = response.data.map(buz=>{
+                return {key:buz._id,value:buz.businessName}
+            })
+            setBusinesses(data)
+        })
+        .catch(err=>console.log(err));
+    }
+
+    useEffect(() => {
+        getBusinesses()
+    }, [])
+
+    // const data = [
+        
+    //     {key:'2', value:'Appliances'},
+    //     {key:'3', value:'Cameras'},
+        
+    //     {key:'5', value:'Vegetables'},
+    //     {key:'6', value:'Diary Products'},
+    //     {key:'7', value:'Drinks'},
+    // ]
+    // console.log(user);
     return (
         <Layout>
             <View style={styles.container}>
@@ -172,6 +214,24 @@ const ProfileScreen = ({navigation}) => {
                     })}
                     </View>
                 </View>
+                <View style={styles.fields}>
+                    <Ionicons name="md-business-sharp" size={30} color="black" />
+                    <View style={styles.selectCompanyField}>
+                        <SelectList 
+                            setSelected={(val) => setUser({...user,businessID:val})} 
+                            data={businesses} 
+                            save="key"
+                            placeholder='Select a Security Company'
+                            searchPlaceholder='Search for a Company'
+                            maxHeight='200'
+                            boxStyles={styles.selectCompanyBox} 
+                            inputStyles={styles.selectCompanyInput}
+                            search={false} 
+                        />
+                    </View>
+                    
+                </View>
+                {errorMessage && <Text style={styles.errorText}>{`* ${errorMessage}`}</Text>}
                 <TouchableOpacity style={styles.button} onPress={handleCreateProfileSubmit} >
                     <Text style={styles.buttonText}>Create Profile</Text>
                 </TouchableOpacity>
@@ -181,7 +241,7 @@ const ProfileScreen = ({navigation}) => {
     )
 }
 
-export default ProfileScreen
+export default CreateProfileScreen
 
 const styles = StyleSheet.create({
     container:{
@@ -242,4 +302,20 @@ const styles = StyleSheet.create({
         fontSize:17,
         color:'#ffff'
       },
+      errorText:{
+        color:'#CC302D',
+        fontSize:15,
+        marginVertical:3
+      },
+      selectCompanyField:{
+        paddingHorizontal:50,
+        paddingBottom:5
+      },
+      selectCompanyBox:{
+        borderRadius:0,
+        borderWidth:0,
+      },
+      selectCompanyInput:{
+        fontSize:17
+      }
 })

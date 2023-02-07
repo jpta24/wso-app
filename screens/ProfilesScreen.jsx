@@ -1,17 +1,45 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { useIsFocused } from "@react-navigation/native";
 
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/auth.context";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import axios from "axios";
+
+import {SERVER_URL} from "@env";
 
 import Layout from '../components/Layout'
 
 import userIcon from "../assets/userIcon.png";
 import businessIcon from "../assets/businessIcon.png";
+import Loading from '../components/Loading';
 
-const Dashboard = ({navigation}) => {
-    const { user,logOutUser } = useContext(AuthContext);
+const ProfilesScreen = ({navigation}) => {
+    const { user:userID,logOutUser } = useContext(AuthContext);
+    const [user, setUser] = useState(null)
+    const isFocused = useIsFocused();
 
+    // console.log(userID._id);
+
+    const getUserInfo = async ()=>{
+      const token = await AsyncStorage.getItem('authToken')
+      if (userID) {
+        axios.get(`${SERVER_URL}/users/${userID._id}`,{headers: {Authorization: `Bearer ${token}`}})
+      .then(response =>{
+         setUser(response.data)
+      })
+      .catch(err=>console.log(err));
+      }
+      
+  }
+
+    useEffect(() => {
+      getUserInfo()
+    }, [isFocused,userID])
+    
+    if(user)  {
    return (
         <Layout>
             <View style={styles.container}>
@@ -20,15 +48,18 @@ const Dashboard = ({navigation}) => {
                         source={userIcon}
                         style={styles.image}
                     />
-                    <Text style={styles.buttonText}>Create a Personal Profile</Text>
+                    <Text style={styles.buttonText}>{(user && !user.fullName) ? 'Create a Personal Profile' : 'View/Edit Personal Profile'}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button}  >
+                <TouchableOpacity style={styles.button} onPress={()=>{
+                  user.businessID ? navigation.navigate('ViewBusinessScreen',{businessID:user.businessID._id}) :
+                  navigation.navigate('CreateBusinessScreen')
+                  } } >
                     <Image
-                        source={businessIcon}
+                        source={(user.businessID) ? {uri:user.businessID.pictureUrl} : businessIcon}
                         style={styles.image}
                     />
-                    <Text style={styles.buttonText}>Create a Business</Text>
+                    <Text style={styles.buttonText}>{(!user.businessID) ? 'Create a Business Profile' : 'View/Edit Business Profile'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonSO} onPress={logOutUser} >
                     <Text style={styles.buttonText}>Log Out</Text>
@@ -37,11 +68,15 @@ const Dashboard = ({navigation}) => {
             
         </Layout>
     )
+   } 
+    else {
+      return <Loading/>
+    }
   }
   
 // }
 
-export default Dashboard
+export default ProfilesScreen
 
 const styles = StyleSheet.create({
     container:{

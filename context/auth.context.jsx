@@ -101,6 +101,16 @@ function AuthProviderWrapper(props) {
         // and update the state variables    
         authenticateUser();
       }  
+
+      const getUserInfo = async ()=>{
+      const token = await AsyncStorage.getItem('authToken')
+      axios.get(`${SERVER_URL}/users/${userID._id}`,{headers: {Authorization: `Bearer ${token}`}})
+      .then(response =>{
+         setUser(response.data)
+         console.log(user);
+      })
+      .catch(err=>console.log(err));
+  }
     
       // 3. Checks if we have a JWT token in localStorage
       // If yes, update our state variables accordingly
