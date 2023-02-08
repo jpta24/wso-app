@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { TouchableOpacity} from 'react-native'
+import React, { useContext, useReducer } from "react";
+import { TouchableOpacity,View,Text} from 'react-native'
 import { NavigationContainer} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -13,15 +13,21 @@ import CreateBusinessScreen from "./screens/CreateBusinessScreen";
 import ViewBusinessScreen from "./screens/ViewBusinessScreen";
 import EditBusinessScreen from "./screens/EditBusinessScreen";
 import SplashScreen from "./screens/SplashScreen";
+import DashboardScreen from "./screens/DashboardScreen";
 
 import { Feather } from '@expo/vector-icons';
+import Loading from "./components/Loading";
 
 const Stack = createNativeStackNavigator();
 
 const Root = () => {
     const { isLoggedIn, hasSigned,user } = useContext(AuthContext);
+    console.log(user);
     
-  return (
+    if (hasSigned === null || isLoggedIn === null) {
+        return <SplashScreen/>
+    }else {
+    return (
     <NavigationContainer>
         <Stack.Navigator>
         {!hasSigned ? (
@@ -68,13 +74,13 @@ const Root = () => {
             </>
         ) : ( !isLoggedIn ?(
                 <>
-                    <Stack.Screen
+                    {/* <Stack.Screen
                         name="SplashScreen"
                         component={SplashScreen}
                         options={{
                             headerShown: false
                         }}
-                    />
+                    /> */}
                     <Stack.Screen
                         name="LoginScreen"
                         component={LoginScreen}
@@ -108,145 +114,173 @@ const Root = () => {
                         }}
                     />
                 </>
-            ) : (
-                <>
-                    <Stack.Screen
-                        name="ProfilesScreen"
-                        component={ProfilesScreen}
+            ) : ( !user ? (
+                <Stack.Screen
+                        name="Loading"
+                        component={Loading}
                         options={{
-                        title: "Profiles",
-                        headerStyle: {
-                            backgroundColor: "#222f3e",
-                        },
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        },
-                        headerTitleAlign: 'center',
-                        headerStyle: {
-                            backgroundColor: "rgba(0,0,0,0.8)",
-                        },
-                        headerTintColor: "#fff",
-
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        },
-                        // headerRight:() => (
-                        //     <TouchableOpacity 
-                        //     style={styles.logoutButton} 
-                        //     onPress={() =>{
-                        //     removeToken()
-                        //     navigation.navigate("LoginScreen")}}
-                        //     >
-                        //     <Text style={styles.logoutButtonText}>Log Out</Text>
-                        //     </TouchableOpacity>
-                        // )
-                        }}
+                        headerShown: false
+                    }}
                     />
-                    <Stack.Screen
-                        name="CreateProfileScreen"
-                        component={CreateProfileScreen}
-                        options={{
-                        title: "Create Profile",
-                        headerStyle: {
-                            backgroundColor: "#222f3e",
-                        },
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        },
-                        headerTitleAlign: 'center',
-                        headerStyle: {
-                            backgroundColor: "rgba(0,0,0,0.8)",
-                        },
-                        headerTintColor: "#fff",
+                ) : (
+                    user.rol === 'user' ? ( 
+                    <>
+                        <Stack.Screen
+                            name="ProfilesScreen"
+                            component={ProfilesScreen}
+                            options={{
+                            title: "Profiles",
+                            headerStyle: {
+                                backgroundColor: "#222f3e",
+                            },
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            },
+                            headerTitleAlign: 'center',
+                            headerStyle: {
+                                backgroundColor: "rgba(0,0,0,0.8)",
+                            },
+                            headerTintColor: "#fff",
 
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        }
-                        }}
-                    />
-                    <Stack.Screen
-                        name="CreateBusinessScreen"
-                        component={CreateBusinessScreen}
-                        options={{
-                        title: "Create Business",
-                        headerStyle: {
-                            backgroundColor: "#222f3e",
-                        },
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        },
-                        headerTitleAlign: 'center',
-                        headerStyle: {
-                            backgroundColor: "rgba(0,0,0,0.8)",
-                        },
-                        headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            }
+                            }}
+                        />
+                        <Stack.Screen
+                            name="CreateProfileScreen"
+                            component={CreateProfileScreen}
+                            options={{
+                            title: "Create Profile",
+                            headerStyle: {
+                                backgroundColor: "#222f3e",
+                            },
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            },
+                            headerTitleAlign: 'center',
+                            headerStyle: {
+                                backgroundColor: "rgba(0,0,0,0.8)",
+                            },
+                            headerTintColor: "#fff",
 
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        }
-                        }}
-                    />
-                    <Stack.Screen
-                        name="ViewBusinessScreen"
-                        component={ViewBusinessScreen}
-                        options={({navigation,route})=>({
-                        title: "Business",
-                        headerStyle: {
-                            backgroundColor: "#222f3e",
-                        },
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        },
-                        headerTitleAlign: 'center',
-                        headerStyle: {
-                            backgroundColor: "rgba(0,0,0,0.8)",
-                        },
-                        headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            }
+                            }}
+                        />
+                        <Stack.Screen
+                            name="CreateBusinessScreen"
+                            component={CreateBusinessScreen}
+                            options={{
+                            title: "Create Business",
+                            headerStyle: {
+                                backgroundColor: "#222f3e",
+                            },
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            },
+                            headerTitleAlign: 'center',
+                            headerStyle: {
+                                backgroundColor: "rgba(0,0,0,0.8)",
+                            },
+                            headerTintColor: "#fff",
 
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        },
-                        headerRight:() => (
-                            <TouchableOpacity 
-                            // style={styles.logoutButton} 
-                            onPress={() =>{
-                            navigation.navigate("EditBusinessScreen",{businessID:route.params.businessID})}}
-                            >
-                            <Feather name="edit" size={24} color="white" />
-                            </TouchableOpacity>
-                        )
-                        })}
-                    />
-                    <Stack.Screen
-                        name="EditBusinessScreen"
-                        component={EditBusinessScreen}
-                        options={{
-                        title: "Edit Business",
-                        headerStyle: {
-                            backgroundColor: "#222f3e",
-                        },
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        },
-                        headerTitleAlign: 'center',
-                        headerStyle: {
-                            backgroundColor: "rgba(0,0,0,0.8)",
-                        },
-                        headerTintColor: "#fff",
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            }
+                            }}
+                        />
+                        <Stack.Screen
+                            name="ViewBusinessScreen"
+                            component={ViewBusinessScreen}
+                            options={({navigation,route})=>({
+                            title: "Business",
+                            headerStyle: {
+                                backgroundColor: "#222f3e",
+                            },
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            },
+                            headerTitleAlign: 'center',
+                            headerStyle: {
+                                backgroundColor: "rgba(0,0,0,0.8)",
+                            },
+                            headerTintColor: "#fff",
 
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        }
-                        }}
-                    />
-                </>
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            },
+                            headerRight:() => (
+                                <TouchableOpacity 
+                                // style={styles.logoutButton} 
+                                onPress={() =>{
+                                navigation.navigate("EditBusinessScreen",{businessID:route.params.businessID})}}
+                                >
+                                <Feather name="edit" size={24} color="white" />
+                                </TouchableOpacity>
+                            )
+                            })}
+                        />
+                        <Stack.Screen
+                            name="EditBusinessScreen"
+                            component={EditBusinessScreen}
+                            options={{
+                            title: "Edit Business",
+                            headerStyle: {
+                                backgroundColor: "#222f3e",
+                            },
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            },
+                            headerTitleAlign: 'center',
+                            headerStyle: {
+                                backgroundColor: "rgba(0,0,0,0.8)",
+                            },
+                            headerTintColor: "#fff",
+
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            }
+                            }}
+                        />
+                    </>
+                    ) : (
+                        <>
+                            <Stack.Screen
+                                name="DashboardScreen"
+                                component={DashboardScreen}
+                                options={{
+                                title: "Dashboard",
+                                headerStyle: {
+                                    backgroundColor: "#222f3e",
+                                },
+                                headerTitleStyle: {
+                                    color: "#ffffff",
+                                },
+                                headerTitleAlign: 'center',
+                                headerStyle: {
+                                    backgroundColor: "rgba(0,0,0,0.8)",
+                                },
+                                headerTintColor: "#fff",
+
+                                headerTitleStyle: {
+                                    color: "#ffffff",
+                                }
+                                }}
+                            />    
+                        </>
+                    
+                    ))
+                
             )
         )
         }
           
         </Stack.Navigator>
       </NavigationContainer>
-  )
+  )}
+  
 }
 
 export default Root

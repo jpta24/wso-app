@@ -1,6 +1,7 @@
-import { StyleSheet, Text, Image, View } from 'react-native'
 import React from 'react'
+import { StyleSheet, Text, Image, View } from 'react-native'
 import Layout from './Layout'
+
 import icon from "../assets/wso-logo.png";
 
 const Loading = () => {

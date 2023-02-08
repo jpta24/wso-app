@@ -1,26 +1,25 @@
-import React, { useState,useContext }  from 'react'
-import { useNavigation } from "@react-navigation/native";
+import React, { useState,useContext,useRef }  from 'react'
 import { StyleSheet, Text, View, Image, TextInput,TouchableOpacity} from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
+import Layout from "../components/Layout";
+import { AuthContext } from "../context/auth.context";
+
 import axios from 'axios';
-
-import {  AuthContext } from '../context/auth.context';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SERVER_URL} from "@env";
 
-import Layout from "../components/Layout";
-
+import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
 import icon from "../assets/wso-logo.png";
 
-const SignupScreen = () => {
+const SignupScreen = ({navigation}) => {
   const { setHasSigned } = useContext(AuthContext);
-  const navigation = useNavigation();
   const [signup, setSignup] = useState({
     email:'',
     username:'',
     password:''
   })
+
+  const usernameRef = useRef()
+  const passwordRef = useRef()
 
   const storeHasSigned = async () => {
     try {
@@ -29,30 +28,6 @@ const SignupScreen = () => {
       console.log(e);
     }
   }
-  
-  const getHasSigned = async () => {
-    try {
-      const value = await AsyncStorage.getItem('hasSigned')
-      if(value === 'true') {
-      }
-      return value
-      
-    } catch(e) {
-      console.log(e);
-    }
-  }
-
-  const removeValue = async () => {
-    try {
-      await AsyncStorage.removeItem('hasSigned')
-      setHasSigned(false)
-    } catch(e) {
-      console.log(e);
-    }
-  }
-
-  // getHasSigned()
-  // removeValue()
   
 	const [errorMessage, setErrorMessage] = useState(undefined);
 
@@ -70,8 +45,10 @@ const SignupScreen = () => {
 			.then((response) => {
         storeHasSigned()
         setHasSigned(true)
+        navigation.navigate('LoginScreen')
 			})
 			.catch((error) => {
+        console.log(error);
 				const errorDescription = error.response.data.message;
 				setErrorMessage(errorDescription);
 			});
@@ -95,6 +72,9 @@ const SignupScreen = () => {
           placeholder='Email'
           placeholderTextColor='#fffff'
           onChangeText={(text) => handleChange("email", text)}
+          onSubmitEditing={()=>{usernameRef.current.focus()}}
+          blurOnSubmit={false}
+          returnKeyType='next'
           />
         </View>
         <View style={styles.fields}>
@@ -104,6 +84,10 @@ const SignupScreen = () => {
           placeholder='Username'
           placeholderTextColor='#fffff'
           onChangeText={(text) => handleChange("username", text)}
+          onSubmitEditing={()=>{passwordRef.current.focus()}}
+          blurOnSubmit={false}
+          returnKeyType='next'
+          ref={usernameRef}
           />
         </View>
         <View style={styles.fields}>
@@ -114,6 +98,8 @@ const SignupScreen = () => {
           placeholder='Password'
           placeholderTextColor='#fffff'
           onChangeText={(text) => handleChange("password", text)}
+          blurOnSubmit={false}
+          ref={passwordRef}
           />
         </View>
         {errorMessage && <Text style={styles.errorText}>{`* ${errorMessage}`}</Text>}

@@ -1,58 +1,22 @@
 import React, { useState, useContext } from 'react'
-import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, Image, TextInput,TouchableOpacity} from 'react-native'
-import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
-import { AuthContext } from "../context/auth.context";
-import axios from 'axios';
-
-import {SERVER_URL} from "@env";
-
-import icon from "../assets/wso-logo.png";
-
+import { useNavigation } from "@react-navigation/native";
 import Layout from "../components/Layout";
+
+import axios from 'axios';
+import {SERVER_URL} from "@env"; 
+
+import { Feather} from '@expo/vector-icons';
+import icon from "../assets/wso-logo.png";
 
 const LoginScreen = () => {
     const { storeToken, authenticateUser} = useContext(AuthContext);
-    // ADD ROUTE PARAMS  USER ID TO DASHBOARD
     const navigation = useNavigation();
     const [signup, setSignup] = useState({
       username:'',
       password:''
     })
-  
-    // const storeToken = async (token) => {
-    //   try {
-    //     await AsyncStorage.setItem('authToken', token)
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // }
-    
-    // const getData = async () => {
-    //   try {
-    //     const value = await AsyncStorage.getItem('hasSigned')
-    //     if(value === 'true') {
-    //       navigation.navigate('LoginScreen');
-    //     }
-    //     return value
-        
-    //   } catch(e) {
-    //     console.log(e);
-    //   }
-    // }
-  
-    // const removeValue = async () => {
-    //   try {
-    //     await AsyncStorage.removeItem('hasSigned')
-    //   } catch(e) {
-    //     console.log(e);
-    //   }
-    // }
-  
-    // getData()
-    // removeValue()
-    // console.log({isLoggedIn});
-    
+      
     const [errorMessage, setErrorMessage] = useState(undefined);
   
     const handleChange = (name, value) => setSignup({ ...signup, [name]: value });
@@ -61,9 +25,7 @@ const LoginScreen = () => {
       const { username, password } = signup
   
           const requestBody = { username, password };
-          // Make an axios request to the API
-          // If POST request is successful redirect to login page
-          // If the request resolves with an error, set the error message in the state
+          
           axios
               .post(`${SERVER_URL}/auth/login`, requestBody)
               .then((response) => {

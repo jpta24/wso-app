@@ -1,34 +1,26 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState, useRef,useContext }  from 'react'
-import * as ImagePicker from "expo-image-picker";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import {SERVER_URL} from "@env";
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
+import Layout from '../components/Layout'
 import { AuthContext } from "../context/auth.context";
 
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import * as ImagePicker from "expo-image-picker";
 
-import Layout from '../components/Layout'
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SERVER_URL} from "@env";
 
+import { MaterialCommunityIcons,Entypo,Ionicons,AntDesign} from '@expo/vector-icons';
 import businessIcon from "../assets/businessIcon.png";
-import CheckboxProfile from '../components/CheckboxProfile';
 
 const CreateBusinessScreen = ({navigation}) => {
-    
-    const { user:userID} = useContext(AuthContext);
-  //SET USER WITH PARAMS AND FIX SUBMIT ROUTE WITH ID
+  const { user:userID} = useContext(AuthContext);
 
   const phoneRef = useRef()
   const countryRef = useRef()
   const streetRef = useRef()
   const cityRef = useRef()
   const emailRef = useRef()
+
   const [business,setBusiness] = useState({
       businessName:'',
       owner:userID._id,
@@ -50,7 +42,7 @@ const CreateBusinessScreen = ({navigation}) => {
   
   const handleChange = (name, value) => setBusiness({ ...business, [name]: value });
   const handleSubChange = (field,name, value) => setBusiness({ ...business, [field]: {...business[field],[name]: value} });
-//   const handleCheckboxChange = (name, value) => setBusiness({ ...business, experience:{...business.experience, [name]: value} });
+
   const storedToken = async () => {
       try {
         const token = await AsyncStorage.getItem('authToken')

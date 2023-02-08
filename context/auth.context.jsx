@@ -10,9 +10,9 @@ const AuthContext = createContext();
 function AuthProviderWrapper(props) {
   
     // 1. State variables are initialized
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasSigned, setHasSigned] = useState(false);
+  const [hasSigned, setHasSigned] = useState(null);
   const [user, setUser] = useState(null);
 
   const getHasSigned = async () => {
@@ -20,6 +20,8 @@ function AuthProviderWrapper(props) {
       const value = await AsyncStorage.getItem('hasSigned')
       if (value) {
         setHasSigned(true)
+      } else {
+        setHasSigned(false)
       }
       return value
       
@@ -102,15 +104,18 @@ function AuthProviderWrapper(props) {
         authenticateUser();
       }  
 
-      const getUserInfo = async ()=>{
-      const token = await AsyncStorage.getItem('authToken')
-      axios.get(`${SERVER_URL}/users/${userID._id}`,{headers: {Authorization: `Bearer ${token}`}})
-      .then(response =>{
-         setUser(response.data)
-         console.log(user);
-      })
-      .catch(err=>console.log(err));
-  }
+    //   ///////////////////RESTART APP UNCOMMENT NEXT BLOCK WITH FUNCTION INVOKE////////////////////////
+    //   const removeValue = async () => {
+    //   try {
+    //     await AsyncStorage.removeItem('hasSigned')
+    //   } catch(e) {
+    //     console.log(e);
+    //   }
+    // }
+  
+    // removeValue()
+    // removeToken();
+
     
       // 3. Checks if we have a JWT token in localStorage
       // If yes, update our state variables accordingly
@@ -120,10 +125,10 @@ function AuthProviderWrapper(props) {
         getHasSigned();
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [])
- 
+      
       // 2. Provider component that will share 'value' to the rest of the component tree
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoading, user, storeToken, authenticateUser, logOutUser, hasSigned }}>
+    <AuthContext.Provider value={{ isLoggedIn, isLoading, user, storeToken, authenticateUser, logOutUser, setHasSigned, hasSigned }}>
       {props.children}
     </AuthContext.Provider>
   )

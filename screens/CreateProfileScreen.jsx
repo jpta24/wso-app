@@ -1,27 +1,21 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState, useRef, useEffect,useContext }  from 'react'
-import * as ImagePicker from "expo-image-picker";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import {SERVER_URL} from "@env";
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
+import Layout from '../components/Layout'
 import { AuthContext } from "../context/auth.context";
 
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Feather, MaterialCommunityIcons} from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-
-import Layout from '../components/Layout'
-
-import userIcon from "../assets/userIcon.png";
-import CheckboxProfile from '../components/CheckboxProfile';
+import * as ImagePicker from "expo-image-picker";
 import { SelectList } from 'react-native-dropdown-select-list'
 
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SERVER_URL} from "@env";
+
+import CheckboxProfile from '../components/CheckboxProfile';
+
+import { Feather,FontAwesome5,Entypo,MaterialIcons,Ionicons} from '@expo/vector-icons';
+import userIcon from "../assets/userIcon.png";
+
 const CreateProfileScreen = ({navigation}) => {
-    //SET USER WITH PARAMS AND FIX SUBMIT ROUTE WITH ID
-    
     const { user:userID} = useContext(AuthContext);
 
     const phoneRef = useRef()
@@ -29,8 +23,6 @@ const CreateProfileScreen = ({navigation}) => {
     const [businesses, setBusinesses] = useState([])
     const [errorMessage, setErrorMessage] = useState(undefined);
     const [user,setUser] = useState({
-        // email:'',
-        // username:'',
         fullName:'',
         phone:'',
         country:'',
@@ -46,16 +38,7 @@ const CreateProfileScreen = ({navigation}) => {
     
     const handleChange = (name, value) => setUser({ ...user, [name]: value });
     const handleCheckboxChange = (name, value) => setUser({ ...user, experience:{...user.experience, [name]: value} });
-    const storedToken = async () => {
-        try {
-          const token = await AsyncStorage.getItem('authToken')
-          return token
-          
-        } catch(e) {
-          console.log(e);
-        }
-      }
-
+  
     const handleCreateProfileSubmit = async () => {
         if (user.fullName === '' || user.phone === '' || user.country === '' ) {
             setErrorMessage('Please fill all fields')
@@ -69,7 +52,7 @@ const CreateProfileScreen = ({navigation}) => {
         const token = await AsyncStorage.getItem('authToken')
         axios.post(`${SERVER_URL}/users/updateUser/${userID._id}`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
         .then(res => {
-            navigation.navigate('Dashboard')})
+            navigation.navigate('ProfilesScreen')})
       .catch(err=>console.log(err));
     }
 
@@ -86,8 +69,7 @@ const CreateProfileScreen = ({navigation}) => {
             quality: 1,
             aspect: [2, 2],
           });
-        // console.log(pickerResult)
-    
+            
         if (!pickerResult.canceled) {
             const form = new FormData()
             form.append('imageUrl', {
@@ -127,16 +109,6 @@ const CreateProfileScreen = ({navigation}) => {
         getBusinesses()
     }, [])
 
-    // const data = [
-        
-    //     {key:'2', value:'Appliances'},
-    //     {key:'3', value:'Cameras'},
-        
-    //     {key:'5', value:'Vegetables'},
-    //     {key:'6', value:'Diary Products'},
-    //     {key:'7', value:'Drinks'},
-    // ]
-    // console.log(user);
     return (
         <Layout>
             <View style={styles.container}>
@@ -160,25 +132,7 @@ const CreateProfileScreen = ({navigation}) => {
                     onChangeText={(text) => handleChange("fullName", text)}
                     />
                 </View>
-                {/* <View style={styles.fields}>
-                    <Feather name="user" size={30} color="black" />
-                    <TextInput
-                    style={styles.textInput}
-                    placeholder='Username'
-                    placeholderTextColor='#fffff'
-                    onChangeText={(text) => handleChange("username", text)}
-                    />
-                </View>
-                <View style={styles.fields}>
-                    <MaterialCommunityIcons name="email-outline" size={30} color="black" />
-                    <TextInput
-                    style={styles.textInput}
-                    placeholder='Email'
-                    placeholderTextColor='#fffff'
-                    keyboardType='email-address'
-                    onChangeText={(text) => handleChange("email", text)}
-                    />
-                </View> */}
+                
                 <View style={styles.fields}>
                     <Entypo name="mobile" size={30} color="black" />
                     <TextInput

@@ -1,16 +1,13 @@
-import React from 'react'
+import React,{ useContext, useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import { useIsFocused } from "@react-navigation/native";
-
-import { useContext, useEffect, useState } from "react";
+import Layout from '../components/Layout'
 import { AuthContext } from "../context/auth.context";
+
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import axios from "axios";
-
 import {SERVER_URL} from "@env";
 
-import Layout from '../components/Layout'
 
 import userIcon from "../assets/userIcon.png";
 import businessIcon from "../assets/businessIcon.png";
@@ -21,19 +18,16 @@ const ProfilesScreen = ({navigation}) => {
     const [user, setUser] = useState(null)
     const isFocused = useIsFocused();
 
-    // console.log(userID._id);
-
     const getUserInfo = async ()=>{
       const token = await AsyncStorage.getItem('authToken')
       if (userID) {
-        axios.get(`${SERVER_URL}/users/${userID._id}`,{headers: {Authorization: `Bearer ${token}`}})
+        axios.get(`${SERVER_URL}/users/profiles/${userID._id}`,{headers: {Authorization: `Bearer ${token}`}})
       .then(response =>{
          setUser(response.data)
       })
       .catch(err=>console.log(err));
       }
-      
-  }
+    }
 
     useEffect(() => {
       getUserInfo()
@@ -61,9 +55,9 @@ const ProfilesScreen = ({navigation}) => {
                     />
                     <Text style={styles.buttonText}>{(!user.businessID) ? 'Create a Business Profile' : 'View/Edit Business Profile'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonSO} onPress={logOutUser} >
+                {user.rol ==='user' && <TouchableOpacity style={styles.buttonSO} onPress={logOutUser} >
                     <Text style={styles.buttonText}>Log Out</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
             
         </Layout>
