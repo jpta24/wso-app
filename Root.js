@@ -2,6 +2,7 @@ import React, { useContext, useReducer } from "react";
 import { TouchableOpacity,View,Text} from 'react-native'
 import { NavigationContainer} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { optionsDefault } from "./styles/options.js";
 
 import {  AuthContext } from './context/auth.context';
 
@@ -22,7 +23,6 @@ const Stack = createNativeStackNavigator();
 
 const Root = () => {
     const { isLoggedIn, hasSigned,user } = useContext(AuthContext);
-    console.log(user);
     
     if (hasSigned === null || isLoggedIn === null) {
         return <SplashScreen/>
@@ -32,86 +32,28 @@ const Root = () => {
         <Stack.Navigator>
         {!hasSigned ? (
             <>
-                {/* <Stack.Screen
-                    name="SplashScreen"
-                    component={SplashScreen}
-                    options={{
-                        headerShown: false
-                    }}
-                /> */}
                 <Stack.Screen
                     name="SignupScreen"
                     component={SignupScreen}
-                    options={{
-                    title: 'Sign Up',
-                    headerTitleAlign: 'center',
-                    headerStyle: {
-                        backgroundColor: "rgba(0,0,0,0.8)",
-                    },
-                    headerTintColor: "#fff",
-
-                    headerTitleStyle: {
-                        color: "#ffffff",
-                    },
-                    }}
+                    options={optionsDefault('Sign Up')}
                 />
                 <Stack.Screen
                     name="LoginScreen"
                     component={LoginScreen}
-                    options={{
-                    title: 'Log In',
-                    headerTitleAlign: 'center',
-                    headerStyle: {
-                        backgroundColor: "rgba(0,0,0,0.8)",
-                    },
-                    headerTintColor: "#fff",
-
-                    headerTitleStyle: {
-                        color: "#ffffff",
-                    },
-                    }}
+                    options={optionsDefault('Log In')}
                 />
             </>
         ) : ( !isLoggedIn ?(
                 <>
-                    {/* <Stack.Screen
-                        name="SplashScreen"
-                        component={SplashScreen}
-                        options={{
-                            headerShown: false
-                        }}
-                    /> */}
                     <Stack.Screen
                         name="LoginScreen"
                         component={LoginScreen}
-                        options={{
-                        title: 'Log In',
-                        headerTitleAlign: 'center',
-                        headerStyle: {
-                            backgroundColor: "rgba(0,0,0,0.8)",
-                        },
-                        headerTintColor: "#fff",
-
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        },
-                        }}
+                        options={optionsDefault('Log In')}
                     />
                     <Stack.Screen
                         name="SignupScreen"
                         component={SignupScreen}
-                        options={{
-                        title: 'Sign Up',
-                        headerTitleAlign: 'center',
-                        headerStyle: {
-                            backgroundColor: "rgba(0,0,0,0.8)",
-                        },
-                        headerTintColor: "#fff",
-
-                        headerTitleStyle: {
-                            color: "#ffffff",
-                        },
-                        }}
+                        options={optionsDefault('Sign Up')}
                     />
                 </>
             ) : ( !user ? (
@@ -128,77 +70,23 @@ const Root = () => {
                         <Stack.Screen
                             name="ProfilesScreen"
                             component={ProfilesScreen}
-                            options={{
-                            title: "Profiles",
-                            headerStyle: {
-                                backgroundColor: "#222f3e",
-                            },
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            },
-                            headerTitleAlign: 'center',
-                            headerStyle: {
-                                backgroundColor: "rgba(0,0,0,0.8)",
-                            },
-                            headerTintColor: "#fff",
-
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            }
-                            }}
+                            options={optionsDefault('Profiles')}
                         />
                         <Stack.Screen
                             name="CreateProfileScreen"
                             component={CreateProfileScreen}
-                            options={{
-                            title: "Create Profile",
-                            headerStyle: {
-                                backgroundColor: "#222f3e",
-                            },
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            },
-                            headerTitleAlign: 'center',
-                            headerStyle: {
-                                backgroundColor: "rgba(0,0,0,0.8)",
-                            },
-                            headerTintColor: "#fff",
-
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            }
-                            }}
+                            options={optionsDefault('Create Profile')}
                         />
                         <Stack.Screen
                             name="CreateBusinessScreen"
                             component={CreateBusinessScreen}
-                            options={{
-                            title: "Create Business",
-                            headerStyle: {
-                                backgroundColor: "#222f3e",
-                            },
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            },
-                            headerTitleAlign: 'center',
-                            headerStyle: {
-                                backgroundColor: "rgba(0,0,0,0.8)",
-                            },
-                            headerTintColor: "#fff",
-
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            }
-                            }}
+                            options={optionsDefault('Create Business')}
                         />
                         <Stack.Screen
                             name="ViewBusinessScreen"
                             component={ViewBusinessScreen}
                             options={({navigation,route})=>({
                             title: "Business",
-                            headerStyle: {
-                                backgroundColor: "#222f3e",
-                            },
                             headerTitleStyle: {
                                 color: "#ffffff",
                             },
@@ -212,12 +100,11 @@ const Root = () => {
                                 color: "#ffffff",
                             },
                             headerRight:() => (
-                                <TouchableOpacity 
-                                // style={styles.logoutButton} 
+                                <TouchableOpacity  
                                 onPress={() =>{
-                                navigation.navigate("EditBusinessScreen",{businessID:route.params.businessID})}}
+                                    navigation.navigate("EditBusinessScreen",{businessID:route.params.businessID})}}
                                 >
-                                <Feather name="edit" size={24} color="white" />
+                                    <Feather name="edit" size={24} color="white" />
                                 </TouchableOpacity>
                             )
                             })}
@@ -225,24 +112,7 @@ const Root = () => {
                         <Stack.Screen
                             name="EditBusinessScreen"
                             component={EditBusinessScreen}
-                            options={{
-                            title: "Edit Business",
-                            headerStyle: {
-                                backgroundColor: "#222f3e",
-                            },
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            },
-                            headerTitleAlign: 'center',
-                            headerStyle: {
-                                backgroundColor: "rgba(0,0,0,0.8)",
-                            },
-                            headerTintColor: "#fff",
-
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            }
-                            }}
+                            options={optionsDefault('Edit Business')}
                         />
                     </>
                     ) : (
@@ -250,24 +120,7 @@ const Root = () => {
                             <Stack.Screen
                                 name="DashboardScreen"
                                 component={DashboardScreen}
-                                options={{
-                                title: "Dashboard",
-                                headerStyle: {
-                                    backgroundColor: "#222f3e",
-                                },
-                                headerTitleStyle: {
-                                    color: "#ffffff",
-                                },
-                                headerTitleAlign: 'center',
-                                headerStyle: {
-                                    backgroundColor: "rgba(0,0,0,0.8)",
-                                },
-                                headerTintColor: "#fff",
-
-                                headerTitleStyle: {
-                                    color: "#ffffff",
-                                }
-                                }}
+                                options={optionsDefault('Dashboard')}
                             />    
                         </>
                     
