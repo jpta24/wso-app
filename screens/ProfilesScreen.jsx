@@ -1,13 +1,13 @@
 import React,{ useContext, useEffect, useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { Text, TouchableOpacity, View, Image } from 'react-native'
 import { useIsFocused } from "@react-navigation/native";
 import Layout from '../components/Layout'
 import { AuthContext } from "../context/auth.context";
+import { styles } from "../styles/styles.js";
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SERVER_URL} from "@env";
-
 
 import userIcon from "../assets/userIcon.png";
 import businessIcon from "../assets/businessIcon.png";
@@ -37,26 +37,26 @@ const ProfilesScreen = ({navigation}) => {
    return (
         <Layout>
             <View style={styles.container}>
-                <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('CreateProfileScreen')}>
+                <TouchableOpacity style={styles.buttonProfile} onPress={()=>navigation.navigate('CreateProfileScreen')}>
                     <Image
                         source={userIcon}
-                        style={styles.image}
+                        style={styles.image250r10}
                     />
-                    <Text style={styles.buttonText}>{(user && !user.fullName) ? 'Create a Personal Profile' : 'View/Edit Personal Profile'}</Text>
+                    <Text style={styles.buttonProfileText}>{(user && !user.fullName) ? 'Create a Personal Profile' : 'View/Edit Personal Profile'}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={()=>{
+                <TouchableOpacity style={styles.buttonProfile} onPress={()=>{
                   user.businessID ? navigation.navigate('ViewBusinessScreen',{businessID:user.businessID._id}) :
                   navigation.navigate('CreateBusinessScreen')
                   } } >
                     <Image
                         source={(user.businessID) ? {uri:user.businessID.pictureUrl} : businessIcon}
-                        style={styles.image}
+                        style={styles.image250r10}
                     />
-                    <Text style={styles.buttonText}>{(!user.businessID) ? 'Create a Business Profile' : 'View/Edit Business Profile'}</Text>
+                    <Text style={styles.buttonProfileText}>{(!user.businessID) ? 'Create a Business Profile' : 'View/Edit Business Profile'}</Text>
                 </TouchableOpacity>
-                {user.rol ==='user' && <TouchableOpacity style={styles.buttonSO} onPress={logOutUser} >
-                    <Text style={styles.buttonText}>Log Out</Text>
+                {user.rol ==='user' && <TouchableOpacity style={styles.buttonProfileSO} onPress={logOutUser} >
+                    <Text style={styles.buttonProfileText}>Log Out</Text>
                 </TouchableOpacity>}
             </View>
             
@@ -68,41 +68,6 @@ const ProfilesScreen = ({navigation}) => {
     }
   }
   
-// }
+
 
 export default ProfilesScreen
-
-const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center',
-        paddingBottom:50
-      },
-    button:{
-        marginTop:5,
-        paddingVertical:20,
-        display:'flex',
-        alignItems:'center',
-        borderRadius:10,
-      },
-      buttonText:{
-        fontSize:17,
-        padding:5,
-        fontWeight:'bold'
-      },
-      image:{
-        width:250,
-        height:250,
-        borderRadius:10
-      },
-      buttonSO:{
-        marginTop:20,
-        paddingHorizontal:40,
-        backgroundColor:'#CC302D',
-        paddingVertical:10,
-        display:'flex',
-        alignItems:'center',
-        borderRadius:10,
-      },
-})

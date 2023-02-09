@@ -128,7 +128,7 @@ function AuthProviderWrapper(props) {
       
       // 2. Provider component that will share 'value' to the rest of the component tree
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoading, user, storeToken, authenticateUser, logOutUser, setHasSigned, hasSigned }}>
+    <AuthContext.Provider value={{ isLoggedIn, isLoading, user, setUser,storeToken, authenticateUser, logOutUser, setHasSigned, hasSigned }}>
       {props.children}
     </AuthContext.Provider>
   )

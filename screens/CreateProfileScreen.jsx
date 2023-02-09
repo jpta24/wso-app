@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect,useContext }  from 'react'
+import React, { useState, useRef, useEffect,useContext,ScrollView }  from 'react'
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
 import Layout from '../components/Layout'
 import { AuthContext } from "../context/auth.context";
+import { styles } from "../styles/styles.js";
 
 import * as ImagePicker from "expo-image-picker";
 import { SelectList } from 'react-native-dropdown-select-list'
@@ -14,45 +15,52 @@ import CheckboxProfile from '../components/CheckboxProfile';
 
 import { Feather,FontAwesome5,Entypo,MaterialIcons,Ionicons} from '@expo/vector-icons';
 import userIcon from "../assets/userIcon.png";
+import SelectInput from '../components/SelectInput';
 
 const CreateProfileScreen = ({navigation}) => {
-    const { user:userID} = useContext(AuthContext);
+    const { user:userID,setUser} = useContext(AuthContext);
 
     const phoneRef = useRef()
     const countryRef = useRef()
+    const positionRef = useRef()
     const [businesses, setBusinesses] = useState([])
     const [errorMessage, setErrorMessage] = useState(undefined);
-    const [user,setUser] = useState({
+    const [profile,setProfile] = useState({
         fullName:'',
         phone:'',
         country:'',
         pictureUrl:'',
-        experience:{
-            coordinator:false,
-            protectionOfficer:false,
-            driver:false,
-            intempreter:false
-        },
-        businessID:''
+        position:'',
+        // experience:{
+        //     coordinator:false,
+        //     protectionOfficer:false,
+        //     driver:false,
+        //     intempreter:false
+        // },
+        businessID:'',
       })
     
-    const handleChange = (name, value) => setUser({ ...user, [name]: value });
-    const handleCheckboxChange = (name, value) => setUser({ ...user, experience:{...user.experience, [name]: value} });
+    const handleChange = (name, value) => setProfile({ ...profile, [name]: value });
+    // const handleCheckboxChange = (name, value) => setProfile({ ...profile, experience:{...profile.experience, [name]: value} });
   
     const handleCreateProfileSubmit = async () => {
-        if (user.fullName === '' || user.phone === '' || user.country === '' ) {
+        if (profile.fullName === '' || profile.phone === '' || profile.country === '' || profile.position === '' ) {
             setErrorMessage('Please fill all fields')
             return
         }
-        if (user.experience.coordinator===false && user.experience.protectionOfficer===false && user.experience.driver===false && user.experience.intempreter===false) {
-            setErrorMessage('Please select at least one Experience')
-            return
-        }
-        const requestBody = user;
+        // if (profile.experience.coordinator===false && profile.experience.protectionOfficer===false && profile.experience.driver===false && profile.experience.intempreter===false) {
+        //     setErrorMessage('Please select at least one Experience')
+        //     return
+        // }
+        
+        const requestBody = profile;
         const token = await AsyncStorage.getItem('authToken')
         axios.post(`${SERVER_URL}/users/updateUser/${userID._id}`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
         .then(res => {
-            navigation.navigate('ProfilesScreen')})
+            // 
+            setUser({...userID,rol:'memberPending'})
+            // navigation.navigate('ProfilesScreen')
+          })
       .catch(err=>console.log(err));
     }
 
@@ -83,14 +91,14 @@ const CreateProfileScreen = ({navigation}) => {
                 },
               })
             .then(res => {
-                setUser({...user, [field]:res.data.fileUrl})})
+                setProfile({...profile, [field]:res.data.fileUrl})})
           .catch(err=>console.log(err));
         } else {
             alert('You did not select any image.');
         }
       };
-      const imageSource = user.pictureUrl !== ''
-    ? { uri: user.pictureUrl }
+      const imageSource = profile.pictureUrl !== ''
+    ? { uri: profile.pictureUrl }
     : userIcon;
 
     const getBusinesses = async ()=>{
@@ -100,6 +108,7 @@ const CreateProfileScreen = ({navigation}) => {
             const data = response.data.map(buz=>{
                 return {key:buz._id,value:buz.businessName}
             })
+
             setBusinesses(data)
         })
         .catch(err=>console.log(err));
@@ -111,10 +120,10 @@ const CreateProfileScreen = ({navigation}) => {
 
     return (
         <Layout>
-            <View style={styles.container}>
+            <View style={[styles.container]}>
                 <Image
                     source={imageSource}
-                    style={styles.image}
+                    style={styles.image200r100}
                 />
                 
                 <TouchableOpacity style={styles.btnImg} onPress={()=>openImagePickerAsync('pictureUrl')} >
@@ -126,13 +135,23 @@ const CreateProfileScreen = ({navigation}) => {
                     style={styles.textInput}
                     placeholder='Full Name'
                     returnKeyType='next'
-                    onSubmitEditing={()=>{phoneRef.current.focus()}}
+                    onSubmitEditing={()=>{positionRef.current.focus()}}
                     blurOnSubmit={false}
                     placeholderTextColor='#fffff'
                     onChangeText={(text) => handleChange("fullName", text)}
                     />
                 </View>
-                
+                <View style={styles.fields}>
+                    <Feather name="star" size={30} color="black" />
+                    <TextInput
+                    style={styles.textInput}
+                    placeholder='Position'
+                    placeholderTextColor='#fffff'
+                    onSubmitEditing={()=>{phoneRef.current.focus()}}
+                    onChangeText={(text) => handleChange("position", text)}
+                    ref={positionRef}
+                    />
+                </View>
                 <View style={styles.fields}>
                     <Entypo name="mobile" size={30} color="black" />
                     <TextInput
@@ -157,22 +176,24 @@ const CreateProfileScreen = ({navigation}) => {
                     ref={countryRef}
                     />
                 </View>
-                <View style={styles.fields}>
+                
+                {/* <View style={styles.fields}>
                     <Feather name="star" size={30} color="black" />
                     <Text style={styles.textTitleField}>
                         Experience
                     </Text>
                     <View style={styles.CheckboxList}>
-                        {Object.keys(user.experience).sort((a,b)=>a.localeCompare(b)).map(elem => {
-                        return <CheckboxProfile key={elem} user={user} field={elem} handleCheckboxChange={handleCheckboxChange}/>
+                        {Object.keys(profile.experience).sort((a,b)=>a.localeCompare(b)).map(elem => {
+                        return <CheckboxProfile key={elem} profile={profile} field={elem} handleCheckboxChange={handleCheckboxChange}/>
                     })}
                     </View>
-                </View>
+                </View> */}
                 <View style={styles.fields}>
                     <Ionicons name="md-business-sharp" size={30} color="black" />
                     <View style={styles.selectCompanyField}>
-                        <SelectList 
-                            setSelected={(val) => setUser({...user,businessID:val})} 
+                        <SelectInput data={businesses} setProfile={setProfile} profile={profile}/>
+                        {/* <SelectList 
+                            setSelected={(val) => setProfile({...profile,businessID:val})} 
                             data={businesses} 
                             save="key"
                             placeholder='Select a Security Company'
@@ -180,14 +201,14 @@ const CreateProfileScreen = ({navigation}) => {
                             maxHeight='200'
                             boxStyles={styles.selectCompanyBox} 
                             inputStyles={styles.selectCompanyInput}
-                            search={false} 
-                        />
+                            // search={false} 
+                        /> */}
                     </View>
                     
                 </View>
                 {errorMessage && <Text style={styles.errorText}>{`* ${errorMessage}`}</Text>}
-                <TouchableOpacity style={styles.button} onPress={handleCreateProfileSubmit} >
-                    <Text style={styles.buttonText}>Create Profile</Text>
+                <TouchableOpacity style={styles.buttonPrimary} onPress={handleCreateProfileSubmit} >
+                    <Text style={styles.buttonPrimaryText}>Create Profile</Text>
                 </TouchableOpacity>
                 
             </View>
@@ -196,80 +217,3 @@ const CreateProfileScreen = ({navigation}) => {
 }
 
 export default CreateProfileScreen
-
-const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center',
-      },
-      image:{
-        width:150,
-        height:150,
-        borderRadius:75
-      },
-      fields:{
-        width:'100%',
-        minHeight:50,
-        height:'auto',
-        paddingStart:20,
-        paddingEnd:20,
-        paddingTop:5,
-        marginVertical:5,
-        borderBottomColor:'black',
-        borderBottomWidth:2,
-        fontSize:17,
-        display:'flex',
-        flexDirection:'row'
-      },
-      textInput:{
-        paddingStart:20,
-        paddingEnd:20,
-        fontSize:17,
-        paddingBottom:8
-    },
-    btnImg:{
-        marginTop:5,
-        backgroundColor:'#F0F0F0',
-        paddingHorizontal:10,
-        paddingVertical:5,
-        display:'flex',
-        alignItems:'center',
-        borderRadius:5,
-      },
-      textTitleField:{
-        paddingStart:20,
-        paddingEnd:20,
-        fontSize:17,
-        paddingBottom:8
-      },
-      button:{
-        marginTop:20,
-        width:'80%',
-        backgroundColor:'#CC302D',
-        paddingVertical:20,
-        display:'flex',
-        alignItems:'center',
-        borderRadius:10,
-      },
-      buttonText:{
-        fontSize:17,
-        color:'#ffff'
-      },
-      errorText:{
-        color:'#CC302D',
-        fontSize:15,
-        marginVertical:3
-      },
-      selectCompanyField:{
-        paddingHorizontal:50,
-        paddingBottom:5
-      },
-      selectCompanyBox:{
-        borderRadius:0,
-        borderWidth:0,
-      },
-      selectCompanyInput:{
-        fontSize:17
-      }
-})

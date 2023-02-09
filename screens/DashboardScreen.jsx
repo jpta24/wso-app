@@ -1,6 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-import React from 'react'
+import React, { useState, useRef,useContext }  from 'react'
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
 import Layout from '../components/Layout'
+import { AuthContext } from "../context/auth.context";
+import { styles } from "../styles/styles.js";
 
 const DashboardScreen = () => {
     
@@ -16,5 +18,3 @@ const DashboardScreen = () => {
 }
 
 export default DashboardScreen
-
-const styles = StyleSheet.create({})

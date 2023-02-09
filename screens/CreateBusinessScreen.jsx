@@ -2,6 +2,7 @@ import React, { useState, useRef,useContext }  from 'react'
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
 import Layout from '../components/Layout'
 import { AuthContext } from "../context/auth.context";
+import { styles } from "../styles/styles.js";
 
 import * as ImagePicker from "expo-image-picker";
 
@@ -13,7 +14,7 @@ import { MaterialCommunityIcons,Entypo,Ionicons,AntDesign} from '@expo/vector-ic
 import businessIcon from "../assets/businessIcon.png";
 
 const CreateBusinessScreen = ({navigation}) => {
-  const { user:userID} = useContext(AuthContext);
+  const { user:userID,authenticateUser,setUser} = useContext(AuthContext);
 
   const phoneRef = useRef()
   const countryRef = useRef()
@@ -62,10 +63,13 @@ const CreateBusinessScreen = ({navigation}) => {
       const token = await AsyncStorage.getItem('authToken')
 
       const requestBody = business;
-
+      
+      navigation.navigate('ProfilesScreen')
       axios.post(`${SERVER_URL}/business`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
       .then(res => {
-          navigation.navigate('ProfilesScreen')})
+        // setUser({...userID,rol:'admin'})
+        navigation.navigate('ProfilesScreen')
+      })
     .catch(err=>console.log(err));
   }
 
@@ -192,11 +196,12 @@ const CreateBusinessScreen = ({navigation}) => {
                     placeholderTextColor='#fffff'
                     keyboardType='email-address'
                     onChangeText={(text) => handleSubChange('address',"email", text)}
+                    ref={emailRef}
                     />
                 </View>
                 
-              <TouchableOpacity style={styles.button} onPress={handleCreateBusinessSubmit} >
-                  <Text style={styles.buttonText}>Create Business</Text>
+              <TouchableOpacity style={styles.buttonPrimary} onPress={handleCreateBusinessSubmit} >
+                  <Text style={styles.buttonPrimaryText}>Create Business</Text>
               </TouchableOpacity>
               
           </View>
@@ -205,79 +210,3 @@ const CreateBusinessScreen = ({navigation}) => {
 }
 
 export default CreateBusinessScreen
-
-const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center',
-      },
-      image:{
-        width:200,
-        height:200,
-        borderRadius:75
-      },
-      fields:{
-        width:'100%',
-        minHeight:50,
-        height:'auto',
-        paddingStart:20,
-        paddingEnd:20,
-        paddingTop:5,
-        marginVertical:5,
-        borderBottomColor:'black',
-        borderBottomWidth:2,
-        fontSize:17,
-        display:'flex',
-        flexDirection:'row'
-      },
-      fields50:{
-        width:'50%',
-        minHeight:50,
-        height:'auto',
-        paddingStart:20,
-        paddingEnd:20,
-        paddingTop:5,
-        marginVertical:5,
-        borderBottomColor:'black',
-        borderBottomWidth:2,
-        fontSize:17,
-        display:'flex',
-        flexDirection:'row'
-      },
-      textInput:{
-        paddingStart:20,
-        paddingEnd:20,
-        fontSize:17,
-        paddingBottom:8
-    },
-    textInput50:{
-        width:50,
-        paddingStart:20,
-        paddingEnd:20,
-        fontSize:17,
-        paddingBottom:8
-    },
-    btnImg:{
-        marginTop:5,
-        backgroundColor:'#F0F0F0',
-        paddingHorizontal:10,
-        paddingVertical:5,
-        display:'flex',
-        alignItems:'center',
-        borderRadius:5,
-      },
-      button:{
-        marginTop:20,
-        width:'80%',
-        backgroundColor:'#CC302D',
-        paddingVertical:20,
-        display:'flex',
-        alignItems:'center',
-        borderRadius:10,
-      },
-      buttonText:{
-        fontSize:17,
-        color:'#ffff'
-      },
-})
