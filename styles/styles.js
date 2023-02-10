@@ -10,6 +10,17 @@ export const styles = StyleSheet.create({
         alignItems:'center',
         borderRadius:5,
     },
+    buttonHeader:{
+        margin:5,
+        borderRadius:5,
+        backgroundColor:'#CC302D'
+
+    },
+    buttonHeaderText:{
+        paddingVertical:5,
+        paddingHorizontal:10,
+        color:'#ffff'
+    },
     buttonProfile:{
         marginTop:5,
         paddingVertical:20,
@@ -49,6 +60,13 @@ export const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         paddingBottom:20
+    },
+    containerDashboard:{
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'space-around',
+        width:'90%',
+        marginVertical:20
     },
     fields:{
         width:'100%',
@@ -96,6 +114,11 @@ export const styles = StyleSheet.create({
     image250r10:{
         width:250,
         height:250,
+        borderRadius:10
+    },
+    image150r10:{
+        width:150,
+        height:150,
         borderRadius:10
     },
     selectCompanyField:{

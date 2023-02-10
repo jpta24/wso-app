@@ -18,11 +18,12 @@ import DashboardScreen from "./screens/DashboardScreen";
 
 import { Feather } from '@expo/vector-icons';
 import Loading from "./components/Loading";
+import { styles } from "./styles/styles.js";
 
 const Stack = createNativeStackNavigator();
 
 const Root = () => {
-    const { isLoggedIn, hasSigned,user } = useContext(AuthContext);
+    const { isLoggedIn, hasSigned,user, logOutUser } = useContext(AuthContext);
     
     if (hasSigned === null || isLoggedIn === null) {
         return <SplashScreen/>
@@ -101,7 +102,7 @@ const Root = () => {
                             },
                             headerRight:() => (
                                 <TouchableOpacity  
-                                onPress={() =>{
+                                    onPress={() =>{
                                     navigation.navigate("EditBusinessScreen",{businessID:route.params.businessID})}}
                                 >
                                     <Feather name="edit" size={24} color="white" />
@@ -120,7 +121,29 @@ const Root = () => {
                             <Stack.Screen
                                 name="DashboardScreen"
                                 component={DashboardScreen}
-                                options={optionsDefault('Dashboard')}
+                                options={({navigation,route})=>({
+                            title: "Dashboard",
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            },
+                            headerTitleAlign: 'center',
+                            headerStyle: {
+                                backgroundColor: "rgba(0,0,0,0.8)",
+                            },
+                            headerTintColor: "#fff",
+
+                            headerTitleStyle: {
+                                color: "#ffffff",
+                            },
+                            headerRight:() => (
+                                <TouchableOpacity onPress={logOutUser}>
+                                    <View style={styles.buttonHeader}>
+                                        <Text style={styles.buttonHeaderText}>Log Out</Text>
+                                    </View>
+                                    
+                                </TouchableOpacity>
+                            )
+                            })}
                             />    
                         </>
                     
