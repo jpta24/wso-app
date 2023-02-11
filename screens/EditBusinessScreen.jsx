@@ -11,9 +11,11 @@ import Loading from '../components/Loading';
 import { MaterialCommunityIcons,Entypo,Ionicons,AntDesign } from '@expo/vector-icons';
 
 const EditBusinessScreen = ({navigation,route}) => {
-    const businessID = route.params.businessID
+  // console.log(route.params);
+    const businessID = route.params.param
     const [business, setBusiness] = useState(null)
     const [isEnabled, setIsEnabled] = useState(false)
+    // console.log(business);
     
     const phoneRef = useRef()
     const countryRef = useRef()
@@ -43,9 +45,9 @@ const EditBusinessScreen = ({navigation,route}) => {
     
           const requestBody = business;
     
-          axios.put(`${SERVER_URL}/business/profile/${business.businessID._id}`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
+          axios.put(`${SERVER_URL}/business/profile/${businessID}`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
           .then(res => {
-              navigation.navigate('ProfilesScreend')})
+              navigation.navigate('ProfilesScreen')})
         .catch(err=>console.log(err));
       }
     

@@ -98,8 +98,8 @@ const CreateProfileScreen = ({navigation}) => {
         }
       };
       const imageSource = profile.pictureUrl !== ''
-    ? { uri: profile.pictureUrl }
-    : userIcon;
+        ? { uri: profile.pictureUrl }
+        : userIcon;
 
     const getBusinesses = async ()=>{
         const token = await AsyncStorage.getItem('authToken')
@@ -146,6 +146,7 @@ const CreateProfileScreen = ({navigation}) => {
                     <TextInput
                     style={styles.textInput}
                     placeholder='Position'
+                    returnKeyType='next'
                     placeholderTextColor='#fffff'
                     onSubmitEditing={()=>{phoneRef.current.focus()}}
                     onChangeText={(text) => handleChange("position", text)}
