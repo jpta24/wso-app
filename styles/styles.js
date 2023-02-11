@@ -131,6 +131,25 @@ export const styles = StyleSheet.create({
         fontSize:17,
         paddingBottom:8
     },
+    textName:{
+        paddingStart:20,
+        paddingEnd:20,
+        fontSize:17,
+        fontWeight:'bold',
+        paddingBottom:1,
+        width:'70%',
+        flexWrap:'wrap',
+        alignItems: 'flex-start',
+    },
+    textOther:{
+        paddingStart:20,
+        paddingEnd:20,
+        fontSize:17,
+        paddingBottom:8,
+        width:'70%',
+        flexWrap:'wrap',
+        alignItems: 'flex-start',
+    },
     linkText:{
         marginTop:10,
         fontSize:15,
