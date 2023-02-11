@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext,useRef } from 'react'
 import { StyleSheet, Text, View, Image, TextInput,TouchableOpacity} from 'react-native'
 import { useNavigation } from "@react-navigation/native";
 import Layout from "../components/Layout"
@@ -12,6 +12,7 @@ import { Feather} from '@expo/vector-icons';
 import icon from "../assets/wso-logo.png";
 
 const LoginScreen = () => {
+  const passwordRef = useRef()
     const { storeToken, authenticateUser} = useContext(AuthContext);
     const navigation = useNavigation();
     const [signup, setSignup] = useState({
@@ -62,6 +63,9 @@ const LoginScreen = () => {
             placeholder='Username'
             placeholderTextColor='#fffff'
             onChangeText={(text) => handleChange("username", text)}
+            onSubmitEditing={()=>{passwordRef.current.focus()}}
+            blurOnSubmit={false}
+            returnKeyType='next'
             />
           </View>
           <View style={styles.fields}>
@@ -72,6 +76,7 @@ const LoginScreen = () => {
             placeholder='Password'
             placeholderTextColor='#fffff'
             onChangeText={(text) => handleChange("password", text)}
+            ref={passwordRef}
             />
           </View>
           {errorMessage && <Text style={styles.errorText}>{`* ${errorMessage}`}</Text>}
