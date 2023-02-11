@@ -2,6 +2,7 @@ import React,{ useEffect, useState }  from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import Layout from '../components/Layout'
 import Loading from '../components/Loading';
+import { styles } from "../styles/styles.js";
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +11,7 @@ import {SERVER_URL} from "@env";
 import { MaterialCommunityIcons,Entypo,Ionicons,AntDesign} from '@expo/vector-icons';
 
 const ViewBusinessScreen = ({navigation,route}) => {
+  const profileRol= route.params.profileRol
     const businessID = route.params.businessID
     const [business, setBusiness] = useState(null)
     
@@ -28,7 +30,10 @@ const ViewBusinessScreen = ({navigation,route}) => {
     }, [])
 
     useEffect(() => {
+      if (profileRol === 'admin') {
         navigation.setParams({businessID: businessID});
+      }
+        
       }, []);
     
 
@@ -37,7 +42,7 @@ if(business) {return (
           <View style={styles.container}>
               <Image
                   source={ {uri: business.pictureUrl} }
-                  style={styles.image}
+                  style={[styles.image,{marginBottom:40}]}
               />
               <View style={styles.fields}>
                 <Ionicons name="md-business-sharp" size={30} color="black" />
@@ -67,63 +72,3 @@ if(business) {return (
 }
 
 export default ViewBusinessScreen
-
-const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center',
-      },
-      image:{
-        width:200,
-        height:200,
-        borderRadius:75,
-        marginBottom:40
-      },
-      fields:{
-        width:'100%',
-        minHeight:50,
-        height:'auto',
-        paddingStart:20,
-        paddingEnd:20,
-        paddingTop:5,
-        marginVertical:5,
-        borderBottomColor:'black',
-        borderBottomWidth:2,
-        fontSize:17,
-        display:'flex',
-        flexDirection:'row'
-      },
-      textName:{
-        paddingStart:20,
-        paddingEnd:20,
-        fontSize:17,
-        fontWeight:'bold',
-        paddingBottom:1,
-        width:'70%',
-        flexWrap:'wrap',
-        alignItems: 'flex-start',
-    },
-    textOther:{
-        paddingStart:20,
-        paddingEnd:20,
-        fontSize:17,
-        paddingBottom:8,
-        width:'70%',
-        flexWrap:'wrap',
-        alignItems: 'flex-start',
-    },
-      button:{
-        marginTop:20,
-        width:'80%',
-        backgroundColor:'#CC302D',
-        paddingVertical:20,
-        display:'flex',
-        alignItems:'center',
-        borderRadius:10,
-      },
-      buttonText:{
-        fontSize:17,
-        color:'#ffff'
-      },
-})
