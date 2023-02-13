@@ -17,6 +17,7 @@ import ViewBusinessScreen from "./screens/ViewBusinessScreen";
 import EditBusinessScreen from "./screens/EditBusinessScreen";
 import SplashScreen from "./screens/SplashScreen";
 import DashboardScreen from "./screens/DashboardScreen";
+import TeamsScreen from "./screens/TeamsScreen";
 
 import { Feather } from '@expo/vector-icons';
 import Loading from "./components/Loading";
@@ -147,6 +148,11 @@ const Root = () => {
                                     name="EditBusinessScreen"
                                     component={EditBusinessScreen}
                                     options={optionsDefault('Edit Business')}
+                                />
+                                <Stack.Screen
+                                    name="TeamsScreen"
+                                    component={TeamsScreen}
+                                    options={optionsDefault('Teams')}
                                 />
                             </>   
                         </>

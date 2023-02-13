@@ -28,7 +28,7 @@ const DashboardScreen = ({navigation}) => {
             <Text style={styles.buttonProfileText}>Profiles</Text>
           </TouchableOpacity>
           {(!user.rol.includes('Pending') && user.rol !== 'member') && (
-            <TouchableOpacity style={styles.buttonProfile} onPress={()=>navigation.navigate('CreateProfileScreen')}>
+            <TouchableOpacity style={styles.buttonProfile} onPress={()=>navigation.navigate('TeamsScreen')}>
               <FontAwesome name="users" size={120} color="black" />
               {/* <Image
                   source={teamsIcon}

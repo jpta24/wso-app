@@ -160,6 +160,33 @@ export const styles = StyleSheet.create({
         color:'#CC302D',
         fontSize:15,
         marginVertical:3
-    }
+    },
+    upTabs:{
+        display:'flex',
+        flexDirection:'row'
+    },
+    upTabsBtn:{
+        width:'50%',
+    },
+    upTabsText:{
+        fontSize:20,
+        color:'#fff',
+        paddingVertical:15,
+        textAlign:'center',
+        borderBottomWidth:1,
+        borderBottomColor:'gray'
+    },
+    upTabActive:{
+        borderBottomWidth:2,
+        borderBottomColor:'#fff'
+    },
+    upTabActiveText:{
+        fontSize:20,
+        color:'#fff',
+        paddingVertical:15,
+        textAlign:'center',
+        borderBottomWidth:1,
+        borderBottomColor:'gray'
+    },
     
 })
