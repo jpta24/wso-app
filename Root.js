@@ -1,8 +1,8 @@
-import React, { useContext, useReducer } from "react";
+import React, { useContext } from "react";
 import { TouchableOpacity,View,Text} from 'react-native'
 import { NavigationContainer} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { optionsDefault } from "./styles/options.js";
+import { optionsDefault,optionsHeaderRightEdit,optionsSO } from "./styles/options.js";
 
 import {  AuthContext } from './context/auth.context';
 
@@ -11,6 +11,8 @@ import SignupScreen from "./screens/SignupScreen";
 import ProfilesScreen from "./screens/ProfilesScreen";
 import CreateProfileScreen from "./screens/CreateProfileScreen";
 import CreateBusinessScreen from "./screens/CreateBusinessScreen";
+import ViewProfileScreen from "./screens/ViewProfileScreen";
+import EditProfileScreen from "./screens/EditProfileScreen";
 import ViewBusinessScreen from "./screens/ViewBusinessScreen";
 import EditBusinessScreen from "./screens/EditBusinessScreen";
 import SplashScreen from "./screens/SplashScreen";
@@ -24,7 +26,7 @@ const Stack = createNativeStackNavigator();
 
 const Root = () => {
     const { isLoggedIn, hasSigned,user, logOutUser } = useContext(AuthContext);
-    
+        // console.log(user);
     if (hasSigned === null || isLoggedIn === null) {
         return <SplashScreen/>
     }else {
@@ -86,29 +88,9 @@ const Root = () => {
                         <Stack.Screen
                             name="ViewBusinessScreen"
                             component={ViewBusinessScreen}
-                            options={({navigation,route})=>({
-                            title: "Business",
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            },
-                            headerTitleAlign: 'center',
-                            headerStyle: {
-                                backgroundColor: "rgba(0,0,0,0.8)",
-                            },
-                            headerTintColor: "#fff",
-
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            },
-                            headerRight:() => (
-                                <TouchableOpacity  
-                                    onPress={() =>{
-                                    navigation.navigate("EditBusinessScreen",{businessID:route.params.businessID})}}
-                                >
-                                    <Feather name="edit" size={24} color="white" />
-                                </TouchableOpacity>
-                            )
-                            })}
+                            options={({navigation,route})=>(
+                                optionsHeaderRightEdit(user,navigation,route,'Business',)
+                            )}
                         />
                         <Stack.Screen
                             name="EditBusinessScreen"
@@ -121,30 +103,52 @@ const Root = () => {
                             <Stack.Screen
                                 name="DashboardScreen"
                                 component={DashboardScreen}
-                                options={({navigation,route})=>({
-                            title: "Dashboard",
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            },
-                            headerTitleAlign: 'center',
-                            headerStyle: {
-                                backgroundColor: "rgba(0,0,0,0.8)",
-                            },
-                            headerTintColor: "#fff",
-
-                            headerTitleStyle: {
-                                color: "#ffffff",
-                            },
-                            headerRight:() => (
-                                <TouchableOpacity onPress={logOutUser}>
-                                    <View style={styles.buttonHeader}>
-                                        <Text style={styles.buttonHeaderText}>Log Out</Text>
-                                    </View>
-                                    
-                                </TouchableOpacity>
-                            )
-                            })}
-                            />    
+                                options={()=>(
+                                    optionsSO('Dashboard',logOutUser)
+                                )}
+                                
+                            /> 
+                            <>
+                                <Stack.Screen
+                                    name="ProfilesScreen"
+                                    component={ProfilesScreen}
+                                    options={optionsDefault('Profiles')}
+                                />
+                                <Stack.Screen
+                                    name="CreateProfileScreen"
+                                    component={CreateProfileScreen}
+                                    options={optionsDefault('Create Profile')}
+                                />
+                                <Stack.Screen
+                                    name="ViewProfileScreen"
+                                    component={ViewProfileScreen}
+                                    options={({navigation,route})=>(
+                                        optionsHeaderRightEdit(user,navigation,route,'Profile')
+                                    )}
+                                />
+                                <Stack.Screen
+                                    name="EditProfileScreen"
+                                    component={EditProfileScreen}
+                                    options={optionsDefault('Edit Profile')}
+                                />
+                                <Stack.Screen
+                                    name="CreateBusinessScreen"
+                                    component={CreateBusinessScreen}
+                                    options={optionsDefault('Create Business')}
+                                />
+                                <Stack.Screen
+                                    name="ViewBusinessScreen"
+                                    component={ViewBusinessScreen}
+                                    options={({navigation,route})=>(
+                                        optionsHeaderRightEdit(user,navigation,route,'Business')
+                                    )}
+                                />
+                                <Stack.Screen
+                                    name="EditBusinessScreen"
+                                    component={EditBusinessScreen}
+                                    options={optionsDefault('Edit Business')}
+                                />
+                            </>   
                         </>
                     
                     ))

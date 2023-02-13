@@ -55,7 +55,7 @@ const CreateBusinessScreen = ({navigation}) => {
     }
 
   const handleCreateBusinessSubmit = async () => {
-    if (business.name === '' || business.address.street === '' || business.address.city === ''
+    if (business.businessName === '' || business.address.street === '' || business.address.city === ''
         || business.address.country === ''|| business.address.phone === '' || business.address.email === '') {
         setErrorMessage('Please fill all fields')
         return
@@ -119,8 +119,11 @@ const CreateBusinessScreen = ({navigation}) => {
                   style={styles.image}
               />
               
-              <TouchableOpacity style={styles.btnImg} onPress={()=>openImagePickerAsync('pictureUrl')} >
-                  <Text style={styles.btnImgText}>Change Image</Text>
+              <TouchableOpacity 
+                style={[styles.btnImg,{backgroundColor:'#F0F0F0'}]} 
+                onPress={()=>openImagePickerAsync('pictureUrl')} 
+                >
+                <Text style={styles.btnImgText}>Change Image</Text>
               </TouchableOpacity>
               <View style={styles.fields}>
                 <Ionicons name="md-business-sharp" size={30} color="black" />

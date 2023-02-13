@@ -103,13 +103,11 @@ const CreateProfileScreen = ({navigation}) => {
 
     const getBusinesses = async ()=>{
         const token = await AsyncStorage.getItem('authToken')
-        axios.get(`${SERVER_URL}/business`,{headers: {Authorization: `Bearer ${token}`}})
+        axios.get(`${SERVER_URL}/business/profile`,{headers: {Authorization: `Bearer ${token}`}})
         .then(response =>{
-            const data = response.data.map(buz=>{
-                return {key:buz._id,value:buz.businessName}
-            })
-
-            setBusinesses(data)
+          const data = response.data
+        
+          setBusinesses(data)
         })
         .catch(err=>console.log(err));
     }
@@ -126,7 +124,9 @@ const CreateProfileScreen = ({navigation}) => {
                     style={styles.image200r100}
                 />
                 
-                <TouchableOpacity style={styles.btnImg} onPress={()=>openImagePickerAsync('pictureUrl')} >
+                <TouchableOpacity 
+                  style={[styles.btnImg,{backgroundColor:'#F0F0F0'}]} 
+                  onPress={()=>openImagePickerAsync('pictureUrl')} >
                     <Text style={styles.btnImgText}>Change Image</Text>
                 </TouchableOpacity>
                 <View style={styles.fields}>
@@ -147,6 +147,7 @@ const CreateProfileScreen = ({navigation}) => {
                     style={styles.textInput}
                     placeholder='Position'
                     returnKeyType='next'
+                    keyboardType='email-address'
                     placeholderTextColor='#fffff'
                     onSubmitEditing={()=>{phoneRef.current.focus()}}
                     onChangeText={(text) => handleChange("position", text)}

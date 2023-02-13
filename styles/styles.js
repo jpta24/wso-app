@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
     btnImg:{
         marginTop:5,
-        backgroundColor:'#F0F0F0',
+        // backgroundColor:'#F0F0F0',
         paddingHorizontal:10,
         paddingVertical:5,
         display:'flex',
@@ -129,7 +129,9 @@ export const styles = StyleSheet.create({
         paddingStart:20,
         paddingEnd:20,
         fontSize:17,
-        paddingBottom:8
+        paddingBottom:8,
+        flexWrap:'wrap',
+        alignItems: 'flex-start',
     },
     textName:{
         paddingStart:20,

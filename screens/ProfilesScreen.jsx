@@ -15,47 +15,59 @@ import Loading from '../components/Loading';
 
 const ProfilesScreen = ({navigation}) => {
     const { user:userID,logOutUser } = useContext(AuthContext);
-    const [user, setUser] = useState(null)
+    const [profile, setProfile] = useState(null)
     const isFocused = useIsFocused();
+    // console.log(profile);
+    // console.log(userID);
 
-    const getUserInfo = async ()=>{
+    const getProfileInfo = async ()=>{
       const token = await AsyncStorage.getItem('authToken')
       if (userID) {
         axios.get(`${SERVER_URL}/users/profiles/${userID._id}`,{headers: {Authorization: `Bearer ${token}`}})
       .then(response =>{
-         setUser(response.data)
+         setProfile(response.data)
       })
       .catch(err=>console.log(err));
       }
     }
 
     useEffect(() => {
-      getUserInfo()
+      getProfileInfo()
     }, [isFocused,userID])
-    
-    if(user)  {
+
+    if(profile)  {
+      const imageSource = profile.pictureUrl !== ''
+      ? { uri: profile.pictureUrl }
+      : userIcon;
    return (
         <Layout>
             <View style={styles.container}>
-                <TouchableOpacity style={styles.buttonProfile} onPress={()=>navigation.navigate('CreateProfileScreen')}>
+                <TouchableOpacity style={styles.buttonProfile} onPress={()=>{
+                  profile.businessID ? 
+                  navigation.navigate('ViewProfileScreen',{userID:profile._id}) 
+                  :
+                  navigation.navigate('CreateProfileScreen')
+                  }}>
                     <Image
-                        source={userIcon}
+                        source={imageSource}
                         style={styles.image250r10}
                     />
-                    <Text style={styles.buttonProfileText}>{(user && !user.fullName) ? 'Create a Personal Profile' : 'View/Edit Personal Profile'}</Text>
+                    <Text style={styles.buttonProfileText}>{(profile && !profile.fullName) ? 'Create a Personal Profile' : 'View Personal Profile'}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.buttonProfile} onPress={()=>{
-                  user.businessID ? navigation.navigate('ViewBusinessScreen',{businessID:user.businessID._id}) :
+                  profile.businessID ? 
+                  navigation.navigate('ViewBusinessScreen',{businessID:profile.businessID._id,profileRol:userID.rol}) 
+                  :
                   navigation.navigate('CreateBusinessScreen')
                   } } >
                     <Image
-                        source={(user.businessID) ? {uri:user.businessID.pictureUrl} : businessIcon}
+                        source={(profile.businessID) ? {uri:profile.businessID.pictureUrl} : businessIcon}
                         style={styles.image250r10}
                     />
-                    <Text style={styles.buttonProfileText}>{(!user.businessID) ? 'Create a Business Profile' : 'View/Edit Business Profile'}</Text>
+                    <Text style={styles.buttonProfileText}>{(!profile.businessID) ? 'Create a Business Profile' : 'View/Edit Business Profile'}</Text>
                 </TouchableOpacity>
-                {user.rol ==='user' && <TouchableOpacity style={styles.buttonProfileSO} onPress={logOutUser} >
+                {profile.rol ==='user' && <TouchableOpacity style={styles.buttonProfileSO} onPress={logOutUser} >
                     <Text style={styles.buttonProfileText}>Log Out</Text>
                 </TouchableOpacity>}
             </View>

@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const SelectInput = ({data,setProfile,profile}) => {
     const [boxIsActive, setBoxIsActive] = useState(true)
-    const [selected, setSelected] = useState('')
+    const [selected, setSelected] = useState(profile.businessID ? profile.businessID.businessName : '')
     const [search, setSearch] = useState('')
 
     const animatedvalue = useRef(new Animated.Value(0)).current;
