@@ -52,9 +52,8 @@ const TeamsScreen = ({navigation}) => {
         // console.log(pendingNumber);
         return (
             <Layout>
-                <ScrollView>
-                    <View style={styles.container}>
-                        <View style={styles.upTabs}>
+                <View style={styles.container}>
+                    <View style={styles.upTabs}>
                         <TouchableOpacity style={[styles.upTabsBtn,tabActiveIsActive]} onPress={()=>handleTabsActive('Active')}>
                             <Text style={tabActiveIsActiveText} >Active</Text>
                         </TouchableOpacity>
@@ -65,22 +64,22 @@ const TeamsScreen = ({navigation}) => {
                             <Text style={tabRejectedIsActiveText} >Rejected</Text>    
                         </TouchableOpacity>   
                     </View>
+                    <ScrollView>
                         {members.filter(mem=>{
-                            if(activeTab === 'Active'){
-                                return mem.rol==='admin' || mem.rol === 'member'
-                            }
-                            if(activeTab === 'Pending'){
-                                return mem.rol.includes('Pending') 
-                            }
-                            if(activeTab === 'Rejected'){
-                                return mem.rol==='rejected' 
-                            }
-                            })
-                            .sort((a,b)=>{return a.rol.localeCompare(b.rol) || a.fullName.localeCompare(b.fullName) })
-                            .map(member=><MemberCard key={member._id} memberData={member}/>)}
-                    </View>
-                    
-                </ScrollView>
+                        if(activeTab === 'Active'){
+                            return mem.rol==='admin' || mem.rol === 'member'
+                        }
+                        if(activeTab === 'Pending'){
+                            return mem.rol.includes('Pending') 
+                        }
+                        if(activeTab === 'Rejected'){
+                            return mem.rol==='rejected' 
+                        }
+                        })
+                        .sort((a,b)=>{return a.rol.localeCompare(b.rol) || a.fullName.localeCompare(b.fullName) })
+                        .map(member=><MemberCard key={member._id} memberData={member} navigation={navigation}/>)}
+                    </ScrollView>
+                </View>
             </Layout>
             
         )

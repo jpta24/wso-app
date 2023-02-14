@@ -26,13 +26,13 @@ export const optionsHeaderRightEdit =(user,navigation,route,title)=>{
             return (
                 <TouchableOpacity  
                     onPress={() =>{
-                        title === 'Business' ? 
+                        title === 'Business' && 
                             navigation.navigate(`Edit${title}Screen`,{param:route.params.businessID})
-                            :
+                        title === 'Profile' &&
                             navigation.navigate(`Edit${title}Screen`,{param:route.params.userID})
                     }}
                 >
-                    <Feather name="edit" size={24} color="white" />
+                    {route.params.userID === user._id && <Feather name="edit" size={24} color="white" />}
                 </TouchableOpacity>
             )
         }

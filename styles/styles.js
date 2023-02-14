@@ -55,11 +55,40 @@ export const styles = StyleSheet.create({
         fontSize:17,
         color:'#ffff'
     },
+    buttonPrimary50:{
+        marginTop:20,
+        width:'40%',
+        backgroundColor:'#CC302D',
+        marginHorizontal:10,
+        paddingVertical:20,
+        display:'flex',
+        alignItems:'center',
+        borderRadius:10,
+    },
+    buttonSecondary50:{
+        marginTop:20,
+        width:'40%',
+        backgroundColor:'rgba(188,188,188,0.15)',
+        marginHorizontal:10,
+        paddingVertical:20,
+        display:'flex',
+        alignItems:'center',
+        borderRadius:10,
+        borderWidth:1,
+        borderColor:'black'
+    },
+    buttonSecondaryText:{
+        fontSize:17,
+    },
     container:{
         flex:1,
         justifyContent:'center',
         alignItems:'center',
         paddingBottom:20
+    },
+    containerBtn:{
+        display:'flex',
+        flexDirection:'row'
     },
     containerDashboard:{
         display:'flex',
@@ -102,8 +131,8 @@ export const styles = StyleSheet.create({
         borderRadius:75
     },
     image200r100:{
-        width:200,
-        height:200,
+        width:150,
+        height:150,
         borderRadius:100
     },
     image200r50:{

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-const MemberCard = ({memberData}) => {
+const MemberCard = ({memberData, navigation}) => {
     // console.log(memberData.position);
     const textField = (field) =>{
         let spaceArr = [0]
@@ -18,7 +18,7 @@ const MemberCard = ({memberData}) => {
         return newWords
     }
   return (
-    <TouchableOpacity  style={styles.card}>
+    <TouchableOpacity  style={styles.card} onPress={()=>navigation.navigate('ViewProfileScreen', {userID:memberData._id})}>
         <View  style={styles.imageContainer}>
             <Image
                 source={ {uri: memberData.pictureUrl} }
