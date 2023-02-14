@@ -3,6 +3,20 @@ import React from 'react'
 
 const MemberCard = ({memberData}) => {
     // console.log(memberData.position);
+    const textField = (field) =>{
+        let spaceArr = [0]
+        for (let i = 1; i < field.length; i++) {
+            if (field.charAt(i) === field.charAt(i).toUpperCase()) {
+                spaceArr.push(i)
+            }    
+        }
+        let newWords =''
+        let newPos = 1
+        for (let i = 0; i < spaceArr.length; i++) {
+               newWords += field[spaceArr[i]].toUpperCase() + field.slice(spaceArr[i]+1,spaceArr[i+1]) + ' '
+        }
+        return newWords
+    }
   return (
     <TouchableOpacity  style={styles.card}>
         <View  style={styles.imageContainer}>
@@ -15,6 +29,7 @@ const MemberCard = ({memberData}) => {
         <View style={styles.textContainer}>
             <Text style={styles.textName}>{memberData.fullName}</Text>
             <Text style={styles.textPosition}>{memberData.position}</Text>
+            <Text style={styles.textRol}>{textField(memberData.rol)}</Text>
         </View>
     </TouchableOpacity>
   )
@@ -29,7 +44,7 @@ const styles = StyleSheet.create({
         borderWidth:1,
         borderColor:'gray',
         borderRadius:10,
-        backgroundColor:'rgba(0,0,0,0.05)',
+        backgroundColor:'rgba(188,188,188,0.15)',
         height:100,
         marginVertical:5
     },
@@ -44,7 +59,7 @@ const styles = StyleSheet.create({
     },
     textContainer:{
         width:'60%',
-        marginTop:20
+        marginTop:15
     },
     textName:{
         fontSize:20,
@@ -52,5 +67,8 @@ const styles = StyleSheet.create({
     },
     textPosition:{
         fontSize:15
+    },
+    textRol:{
+        fontSize:13
     }
 })

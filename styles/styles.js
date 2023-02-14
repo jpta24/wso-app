@@ -166,10 +166,10 @@ export const styles = StyleSheet.create({
         flexDirection:'row'
     },
     upTabsBtn:{
-        width:'50%',
+        width:'33%',
     },
     upTabsText:{
-        fontSize:20,
+        fontSize:17,
         color:'#fff',
         paddingVertical:15,
         textAlign:'center',
@@ -181,9 +181,17 @@ export const styles = StyleSheet.create({
         borderBottomColor:'#fff'
     },
     upTabActiveText:{
-        fontSize:20,
+        fontSize:17,
         color:'#fff',
         paddingVertical:15,
+        textAlign:'center',
+        borderBottomWidth:1,
+        borderBottomColor:'gray'
+    },
+    upTabInactiveText:{
+        fontSize:16,
+        color:'#D5D5D5',
+        paddingVertical:17,
         textAlign:'center',
         borderBottomWidth:1,
         borderBottomColor:'gray'
