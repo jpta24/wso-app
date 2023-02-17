@@ -18,8 +18,8 @@ import userIcon from "../assets/userIcon.png";
 import SelectInput from '../components/SelectInput';
 
 const CreateProfileScreen = ({navigation}) => {
-    const { user:userID,setUser} = useContext(AuthContext);
-
+    const { user,setUser, authenticateUser } = useContext(AuthContext);
+    
     const phoneRef = useRef()
     const countryRef = useRef()
     const positionRef = useRef()
@@ -44,6 +44,10 @@ const CreateProfileScreen = ({navigation}) => {
     // const handleCheckboxChange = (name, value) => setProfile({ ...profile, experience:{...profile.experience, [name]: value} });
   
     const handleCreateProfileSubmit = async () => {
+        // await setUser({...user,'rol':'memberPending'})
+        // navigation.navigate('ProfilesScreen')
+        // console.log('test:',user);
+        // return
         if (profile.fullName === '' || profile.phone === '' || profile.country === '' || profile.position === '' ) {
             setErrorMessage('Please fill all fields')
             return
@@ -52,14 +56,12 @@ const CreateProfileScreen = ({navigation}) => {
         //     setErrorMessage('Please select at least one Experience')
         //     return
         // }
-        
         const requestBody = profile;
         const token = await AsyncStorage.getItem('authToken')
-        axios.post(`${SERVER_URL}/users/updateUser/${userID._id}`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
-        .then(res => {
-            // 
-            setUser({...userID,rol:'memberPending'})
-            // navigation.navigate('ProfilesScreen')
+        axios.post(`${SERVER_URL}/users/updateUser/${user._id}`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
+        .then(res => {// 
+            authenticateUser()
+            navigation.navigate('DashboardScreen')
           })
       .catch(err=>console.log(err));
     }
@@ -194,17 +196,6 @@ const CreateProfileScreen = ({navigation}) => {
                     <Ionicons name="md-business-sharp" size={30} color="black" />
                     <View style={styles.selectCompanyField}>
                         <SelectInput data={businesses} setProfile={setProfile} profile={profile}/>
-                        {/* <SelectList 
-                            setSelected={(val) => setProfile({...profile,businessID:val})} 
-                            data={businesses} 
-                            save="key"
-                            placeholder='Select a Security Company'
-                            searchPlaceholder='Search for a Company'
-                            maxHeight='200'
-                            boxStyles={styles.selectCompanyBox} 
-                            inputStyles={styles.selectCompanyInput}
-                            // search={false} 
-                        /> */}
                     </View>
                     
                 </View>

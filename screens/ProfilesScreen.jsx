@@ -9,16 +9,27 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SERVER_URL} from "@env";
 
+import { FontAwesome,MaterialIcons } from '@expo/vector-icons';
 import userIcon from "../assets/userIcon.png";
 import businessIcon from "../assets/businessIcon.png";
 import Loading from '../components/Loading';
 
 const ProfilesScreen = ({navigation}) => {
-    const { user:userID,logOutUser } = useContext(AuthContext);
+    const { user:userID,logOutUser,authenticateUser} = useContext(AuthContext);
     const [profile, setProfile] = useState(null)
     const isFocused = useIsFocused();
-    // console.log(profile);
+    // console.log(isFocused);
     // console.log(userID);
+    const storeHasSigned = async () => {
+      try {
+        const isYetSigned = await AsyncStorage.getItem('hasSigned')
+        if (!isYetSigned) {
+          await AsyncStorage.setItem('hasSigned', 'true')
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
     const getProfileInfo = async ()=>{
       const token = await AsyncStorage.getItem('authToken')
@@ -33,12 +44,12 @@ const ProfilesScreen = ({navigation}) => {
 
     useEffect(() => {
       getProfileInfo()
-    }, [isFocused,userID])
+      storeHasSigned()
+      authenticateUser()
+    }, [isFocused])
 
     if(profile)  {
-      const imageSource = profile.pictureUrl !== ''
-      ? { uri: profile.pictureUrl }
-      : userIcon;
+      const imageSource = profile.pictureUrl ? { uri: profile.pictureUrl } : userIcon;
    return (
         <Layout>
             <View style={styles.container}>
@@ -48,6 +59,7 @@ const ProfilesScreen = ({navigation}) => {
                   :
                   navigation.navigate('CreateProfileScreen')
                   }}>
+                  {/* <FontAwesome name="user" size={200} color="black" /> */}
                     <Image
                         source={imageSource}
                         style={styles.image250r10}
@@ -67,9 +79,6 @@ const ProfilesScreen = ({navigation}) => {
                     />
                     <Text style={styles.buttonProfileText}>{(!profile.businessID) ? 'Create a Business Profile' : 'View/Edit Business Profile'}</Text>
                 </TouchableOpacity>
-                {profile.rol ==='user' && <TouchableOpacity style={styles.buttonProfileSO} onPress={logOutUser} >
-                    <Text style={styles.buttonProfileText}>Log Out</Text>
-                </TouchableOpacity>}
             </View>
             
         </Layout>

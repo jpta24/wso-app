@@ -225,5 +225,25 @@ export const styles = StyleSheet.create({
         borderBottomWidth:1,
         borderBottomColor:'gray'
     },
+    searchBoxContainer:{
+        display:'flex',
+        flexDirection:'row',
+        borderColor:'gray',
+        borderWidth:1,
+        borderRadius:10,
+        marginVertical:3,
+        padding:3,
+        width:'85%',
+        justifyContent:'space-between'
+    },
+    textSearch:{
+        fontSize:17,
+        color:'gray',
+        marginHorizontal:8,
+    },
+    boxSearch:{
+        display:'flex',
+        flexDirection:'row',
+    },
     
 })

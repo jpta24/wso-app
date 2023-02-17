@@ -1,5 +1,6 @@
-import React,{ useEffect, useState }  from 'react'
+import React,{ useContext,useEffect, useState }  from 'react'
 import { TouchableOpacity, Text, View, Image } from 'react-native'
+import { AuthContext } from "../context/auth.context";
 import Layout from '../components/Layout'
 import Loading from '../components/Loading';
 import { styles } from "../styles/styles.js";
@@ -9,17 +10,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SERVER_URL} from "@env";
 
 import { Entypo,Feather,Ionicons,MaterialIcons,MaterialCommunityIcons,FontAwesome5 } from '@expo/vector-icons';
+import ModalBox from '../components/ModalBox';
 
 const ViewProfileScreen = ({navigation,route}) => {
   // console.log(route.params);
+  const { user:adminID } = useContext(AuthContext);
     const userID = route.params.userID
 
     const [user, setUser] = useState(null)
+    const [modalVisible, setModalVisible] = useState(false);
+    const [caseText, setCaseText] = useState('new')
+    
 
     const getUserInfo = async ()=>{
         const token = await AsyncStorage.getItem('authToken')
         axios.get(`${SERVER_URL}/users/profile/${userID}`,{headers: {Authorization: `Bearer ${token}`}})
         .then(response =>{
+          
            setUser(response.data)
         })
         .catch(err=>console.log(err));
@@ -32,6 +39,25 @@ const ViewProfileScreen = ({navigation,route}) => {
       useEffect(() => {
         navigation.setParams({userID});
       }, []);
+
+      const updateUserRol = async (rol)=>{
+        const requestBody = {
+            rol:rol,
+            change:{
+              by:adminID._id,
+              date: new Date(),
+              change:`rol to ${rol}`
+            }
+        }  
+        // console.log(requestBody);
+          const token = await AsyncStorage.getItem('authToken')
+              axios.put(`${SERVER_URL}/users/updateRol/${userID}`,requestBody,{headers: {Authorization: `Bearer ${token}`}})
+              .then(response =>{
+                
+                 setUser(response.data)
+              })
+              .catch(err=>console.log(err));
+        }
 
       const textField = (field) =>{
         let spaceArr = [0]
@@ -48,7 +74,8 @@ const ViewProfileScreen = ({navigation,route}) => {
         return newWords
     }
     
-      if(user) {return (
+      if(user) {
+        return (
         <Layout>
               <View style={styles.container}>
                   <Image
@@ -99,19 +126,30 @@ const ViewProfileScreen = ({navigation,route}) => {
                       <Text style={styles.textOther}>{`${user.businessID.businessName}`}</Text>
                   </View>
 
-                  {user.rol.includes('Pending') &&
+                  {user.rol.includes('Pending') && adminID.rol === 'admin' &&
                     <View style={styles.containerBtn}>
-                      <TouchableOpacity style={styles.buttonPrimary50}  >
+                      <TouchableOpacity style={styles.buttonPrimary50} onPress={()=>{
+                        setCaseText('new')
+                        setModalVisible(true)}} >
                         <Text style={styles.buttonPrimaryText}>Accept</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.buttonSecondary50}  >
+                      <TouchableOpacity style={styles.buttonSecondary50} onPress={()=>updateUserRol('rejected')} >
                           <Text style={styles.buttonSecondaryText}>Reject</Text>
+                      </TouchableOpacity>
+                    </View> 
+                    }
+                    {adminID.rol ==='admin' && adminID._id!==userID && (user.rol === 'member' || user.rol==='rejected') &&
+                    <View style={styles.containerBtn}>
+                      <TouchableOpacity style={styles.buttonPrimary50} onPress={()=>{
+                        setCaseText('change')
+                        setModalVisible(true)}} >
+                        <Text style={styles.buttonPrimaryText}>Change Rol</Text>
                       </TouchableOpacity>
                     </View> 
                     }
                   
                   
-
+                    <ModalBox modalVisible={modalVisible} setModalVisible={setModalVisible} updateUserRol={updateUserRol} caseText={caseText} rol={user.rol}/>
               </View>
           </Layout>
       )}else{

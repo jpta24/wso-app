@@ -38,9 +38,6 @@ const SignupScreen = ({navigation}) => {
     const { username, password, email } = signup
 
 		const requestBody = { username, password, email };
-		// Make an axios request to the API
-		// If POST request is successful redirect to login page
-		// If the request resolves with an error, set the error message in the state
 		axios
 			.post(`${SERVER_URL}/auth/signup`, requestBody)
 			.then((response) => {
@@ -72,6 +69,7 @@ const SignupScreen = ({navigation}) => {
           style={styles.textInput}
           placeholder='Email'
           placeholderTextColor='#fffff'
+          keyboardType='email-address'
           onChangeText={(text) => handleChange("email", text)}
           onSubmitEditing={()=>{usernameRef.current.focus()}}
           blurOnSubmit={false}

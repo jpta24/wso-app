@@ -22,17 +22,35 @@ export const optionsDefault =(title)=> {
 
 export const optionsHeaderRightEdit =(user,navigation,route,title)=>{
     const checkUserRol = (navigation,route) => {
-        if (user.rol === 'admin') {
+        if (user.rol === 'admin' && title === 'Business') {
             return (
                 <TouchableOpacity  
                     onPress={() =>{
-                        title === 'Business' && 
-                            navigation.navigate(`Edit${title}Screen`,{param:route.params.businessID})
-                        title === 'Profile' &&
-                            navigation.navigate(`Edit${title}Screen`,{param:route.params.userID})
+                        navigation.navigate(`Edit${title}Screen`,{param:route.params.businessID})
+                        // title === 'Business' && 
+                        //     navigation.navigate(`Edit${title}Screen`,{param:route.params.businessID})
+                        // title === 'Profile' &&
+                        //     navigation.navigate(`Edit${title}Screen`,{param:route.params.userID})
                     }}
                 >
-                    {route.params.userID === user._id && <Feather name="edit" size={24} color="white" />}
+                    <Feather name="edit" size={24} color="white" />
+                    {/* {route.params.userID === user._id && <Feather name="edit" size={24} color="white" />} */}
+                </TouchableOpacity>
+            )
+        }
+        if (route.params.userID === user._id && title === 'Profile') {
+            return (
+                <TouchableOpacity  
+                    onPress={() =>{
+                        navigation.navigate(`Edit${title}Screen`,{param:route.params.userID})
+                        // title === 'Business' && 
+                        //     navigation.navigate(`Edit${title}Screen`,{param:route.params.businessID})
+                        // title === 'Profile' &&
+                        //     navigation.navigate(`Edit${title}Screen`,{param:route.params.userID})
+                    }}
+                >
+                    <Feather name="edit" size={24} color="white" />
+                    {/* {route.params.userID === user._id && <Feather name="edit" size={24} color="white" />} */}
                 </TouchableOpacity>
             )
         }

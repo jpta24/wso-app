@@ -21,13 +21,9 @@ const DashboardScreen = ({navigation}) => {
         <View style={styles.containerDashboard}>
           <TouchableOpacity style={styles.buttonProfile} onPress={()=>navigation.navigate('ProfilesScreen')}>
             <FontAwesome name="user" size={120} color="black" />
-            {/* <Image
-                source={profilesIcon}
-                style={styles.image150r10}
-            /> */}
             <Text style={styles.buttonProfileText}>Profiles</Text>
           </TouchableOpacity>
-          {(!user.rol.includes('Pending') && user.rol !== 'member') && (
+          {(!user.rol.includes('Pending') && user.rol !== 'member' && user.rol !== 'user') && (
             <TouchableOpacity style={styles.buttonProfile} onPress={()=>navigation.navigate('TeamsScreen')}>
               <FontAwesome name="users" size={120} color="black" />
               {/* <Image
@@ -37,7 +33,11 @@ const DashboardScreen = ({navigation}) => {
               <Text style={styles.buttonProfileText}>Teams</Text>
             </TouchableOpacity>)}
         </View>
-        {!user.rol.includes('Pending') ? (
+
+        {user.rol==='user' && <>
+            <Text style={{fontSize:15,paddingBottom:140}}>{`Please Create your Profile(s)`}</Text>
+          </>}
+        {(!user.rol.includes('Pending') && user.rol !== 'user') ? (
           <View style={styles.containerDashboard}>
             {user.rol !== 'member' && (
               <TouchableOpacity style={styles.buttonProfile} onPress={()=>navigation.navigate('CreateProfileScreen')}>
@@ -57,7 +57,7 @@ const DashboardScreen = ({navigation}) => {
                 <Text style={styles.buttonProfileText}>Tasks</Text>
               </TouchableOpacity>
           </View>
-        ) : (
+        ) : (user.rol!=='user' && 
           <>
             <Text style={{fontSize:15}}>Your account has not been confirmed by the Business</Text>
             <Text>Please contact the Business or try again later</Text>

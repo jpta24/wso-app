@@ -1,5 +1,5 @@
 import React,{ useContext, useEffect, useState } from 'react'
-import { Text, TouchableOpacity, View, Image,ScrollView } from 'react-native'
+import { Text, TouchableOpacity, View,ScrollView, TextInput, } from 'react-native'
 import { useIsFocused } from "@react-navigation/native";
 import Layout from '../components/Layout'
 import { AuthContext } from "../context/auth.context";
@@ -9,13 +9,14 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SERVER_URL} from "@env";
 
+import { Feather } from '@expo/vector-icons';
 import Loading from '../components/Loading';
 import MemberCard from '../components/MemberCard';
 
 const TeamsScreen = ({navigation}) => {
     const { user} = useContext(AuthContext);
     const [members, setMembers] = useState(null)
-    // console.log();
+    const [searchBox, setSearchBox] = useState('')
     const isFocused = useIsFocused();
 
     const getMembers = async ()=>{
@@ -30,8 +31,8 @@ const TeamsScreen = ({navigation}) => {
     
     useEffect(() => {
         getMembers()
-    }, [])
-    // Manage Tabs
+    }, [isFocused])
+
     const [activeTab, setActiveTab] = useState('Active')
 
     const handleTabsActive = (tab) => {
@@ -44,12 +45,8 @@ const TeamsScreen = ({navigation}) => {
     const tabPendingIsActiveText= activeTab === 'Pending' ? styles.upTabActiveText : styles.upTabInactiveText
     const tabRejectedIsActiveText = activeTab === 'Rejected' ? styles.upTabActiveText : styles.upTabInactiveText
 
-    const pendingNumber = members
-
     if (members) {
-        // console.log(members);
         const pendingNumber = members.filter(member=>member.rol.includes('Pending')).length
-        // console.log(pendingNumber);
         return (
             <Layout>
                 <View style={styles.container}>
@@ -58,12 +55,25 @@ const TeamsScreen = ({navigation}) => {
                             <Text style={tabActiveIsActiveText} >Active</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.upTabsBtn,tabPendingIsActive]} onPress={()=>handleTabsActive('Pending')}>
-                            <Text style={tabPendingIsActiveText} >{`Pending (${pendingNumber})`}</Text>    
+                            <Text style={tabPendingIsActiveText} >{`Pending ${pendingNumber === 0 ? '': ('(' + pendingNumber + ')')}`}</Text>    
                         </TouchableOpacity>  
                         <TouchableOpacity style={[styles.upTabsBtn,tabRejectedIsActive]} onPress={()=>handleTabsActive('Rejected')}>
                             <Text style={tabRejectedIsActiveText} >Rejected</Text>    
                         </TouchableOpacity>   
                     </View>
+
+                    <View style={styles.searchBoxContainer}>
+                        <View style={styles.boxSearch} >
+                            <Feather name="search" size={24} color="gray" />
+                            <TextInput
+                                style={styles.textSearch}
+                                placeholder='Search a Member by Name'
+                                placeholderTextColor='gray'
+                                onChangeText={(text) => setSearchBox(text)}
+                            />
+                        </View>
+                    </View>
+
                     <ScrollView>
                         {members.filter(mem=>{
                         if(activeTab === 'Active'){
@@ -75,6 +85,13 @@ const TeamsScreen = ({navigation}) => {
                         if(activeTab === 'Rejected'){
                             return mem.rol==='rejected' 
                         }
+                        })
+                        .filter(elem=>{
+                            if(searchBox === ''){
+                                return elem 
+                            } else {
+                                return elem.fullName.toLowerCase().includes(searchBox.toLowerCase())
+                            }
                         })
                         .sort((a,b)=>{return a.rol.localeCompare(b.rol) || a.fullName.localeCompare(b.fullName) })
                         .map(member=><MemberCard key={member._id} memberData={member} navigation={navigation}/>)}

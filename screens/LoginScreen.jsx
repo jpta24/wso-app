@@ -6,6 +6,7 @@ import { AuthContext } from "../context/auth.context";
 import { styles } from "../styles/styles.js";
 
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SERVER_URL} from "@env"; 
 
 import { Feather} from '@expo/vector-icons';
@@ -23,6 +24,16 @@ const LoginScreen = () => {
     const [errorMessage, setErrorMessage] = useState(undefined);
   
     const handleChange = (name, value) => setSignup({ ...signup, [name]: value });
+    const storeHasSigned = async () => {
+      try {
+        const isYetSigned = await AsyncStorage.getItem('hasSigned')
+        if (!isYetSigned) {
+          await AsyncStorage.setItem('hasSigned', 'true')
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
     const handleLoginSubmit = () => {
       const { username, password } = signup
@@ -32,6 +43,7 @@ const LoginScreen = () => {
           axios
               .post(`${SERVER_URL}/auth/login`, requestBody)
               .then((response) => {
+                storeHasSigned()
                 storeToken(response.data.authToken)
                 authenticateUser()
               })

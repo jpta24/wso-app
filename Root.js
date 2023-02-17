@@ -27,7 +27,7 @@ const Stack = createNativeStackNavigator();
 
 const Root = () => {
     const { isLoggedIn, hasSigned,user, logOutUser } = useContext(AuthContext);
-        // console.log(user);
+        // console.log('root',user);
     if (hasSigned === null || isLoggedIn === null) {
         return <SplashScreen/>
     }else {
@@ -69,38 +69,7 @@ const Root = () => {
                     }}
                     />
                 ) : (
-                    user.rol === 'user' ? ( 
                     <>
-                        <Stack.Screen
-                            name="ProfilesScreen"
-                            component={ProfilesScreen}
-                            options={optionsDefault('Profiles')}
-                        />
-                        <Stack.Screen
-                            name="CreateProfileScreen"
-                            component={CreateProfileScreen}
-                            options={optionsDefault('Create Profile')}
-                        />
-                        <Stack.Screen
-                            name="CreateBusinessScreen"
-                            component={CreateBusinessScreen}
-                            options={optionsDefault('Create Business')}
-                        />
-                        <Stack.Screen
-                            name="ViewBusinessScreen"
-                            component={ViewBusinessScreen}
-                            options={({navigation,route})=>(
-                                optionsHeaderRightEdit(user,navigation,route,'Business',)
-                            )}
-                        />
-                        <Stack.Screen
-                            name="EditBusinessScreen"
-                            component={EditBusinessScreen}
-                            options={optionsDefault('Edit Business')}
-                        />
-                    </>
-                    ) : (
-                        <>
                             <Stack.Screen
                                 name="DashboardScreen"
                                 component={DashboardScreen}
@@ -155,9 +124,7 @@ const Root = () => {
                                     options={optionsDefault('Teams')}
                                 />
                             </>   
-                        </>
-                    
-                    ))
+                        </>)
                 
             )
         )
