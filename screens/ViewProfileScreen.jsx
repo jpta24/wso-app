@@ -36,9 +36,9 @@ const ViewProfileScreen = ({navigation,route}) => {
         getUserInfo()
       }, [])
 
-      useEffect(() => {
-        navigation.setParams({userID});
-      }, []);
+    useEffect(() => {
+      navigation.setParams({userID});
+    }, []);
 
       const updateUserRol = async (rol)=>{
         const requestBody = {

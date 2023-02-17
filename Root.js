@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { TouchableOpacity,View,Text} from 'react-native'
 import { NavigationContainer} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { optionsDefault,optionsHeaderRightEdit,optionsSO } from "./styles/options.js";
+import { optionsDefault,optionsHeaderRightEdit,optionsSO,optionsHeaderAddNew } from "./styles/options.js";
 
 import {  AuthContext } from './context/auth.context';
 
@@ -18,6 +18,7 @@ import EditBusinessScreen from "./screens/EditBusinessScreen";
 import SplashScreen from "./screens/SplashScreen";
 import DashboardScreen from "./screens/DashboardScreen";
 import TeamsScreen from "./screens/TeamsScreen";
+import ClientsScreen from "./screens/ClientsScreen";
 
 import { Feather } from '@expo/vector-icons';
 import Loading from "./components/Loading";
@@ -122,6 +123,13 @@ const Root = () => {
                                     name="TeamsScreen"
                                     component={TeamsScreen}
                                     options={optionsDefault('Teams')}
+                                />
+                                <Stack.Screen
+                                    name="ClientsScreen"
+                                    component={ClientsScreen}
+                                    options={({navigation,route})=>(
+                                        optionsHeaderAddNew(navigation,route,'Clients')
+                                    )}
                                 />
                             </>   
                         </>)

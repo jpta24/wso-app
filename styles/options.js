@@ -1,5 +1,5 @@
 import { TouchableOpacity,View,Text} from 'react-native'
-import { Feather } from '@expo/vector-icons';
+import { Feather,MaterialIcons } from '@expo/vector-icons';
 import { styles } from "../styles/styles.js";
 
 export const optionsDefault =(title)=> {
@@ -95,6 +95,37 @@ export const optionsSO = (title,logOutUser) => {
                 </View>
                 
             </TouchableOpacity>
+        )
+    }
+}
+
+export const optionsHeaderAddNew =(navigation,route,title)=>{
+    const checkUserRol = (navigation,route) => {
+        return <TouchableOpacity  
+                    onPress={() =>{
+                        navigation.navigate('NewClientScreen',{param:route.params.businessID})
+                    }}
+                >
+                    <MaterialIcons name="add-circle-outline" size={24} color="white" />
+                </TouchableOpacity>
+    }
+
+    return{
+        title: title,
+        headerTitleStyle: {
+            color: "#ffffff",
+        },
+        headerTitleAlign: 'center',
+        headerStyle: {
+            backgroundColor: "rgba(0,0,0,0.8)",
+        },
+        headerTintColor: "#fff",
+
+        headerTitleStyle: {
+            color: "#ffffff",
+        },
+        headerRight:() => (
+            checkUserRol(navigation,route)
         )
     }
 }

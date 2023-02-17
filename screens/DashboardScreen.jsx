@@ -40,7 +40,7 @@ const DashboardScreen = ({navigation}) => {
         {(!user.rol.includes('Pending') && user.rol !== 'user') ? (
           <View style={styles.containerDashboard}>
             {user.rol !== 'member' && (
-              <TouchableOpacity style={styles.buttonProfile} onPress={()=>navigation.navigate('CreateProfileScreen')}>
+              <TouchableOpacity style={styles.buttonProfile} onPress={()=>navigation.navigate('ClientsScreen')}>
                 <MaterialIcons name="business-center" size={120} color="black" />
                 {/* <Image
                     source={clientsIcon}

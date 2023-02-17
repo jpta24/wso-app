@@ -197,6 +197,9 @@ export const styles = StyleSheet.create({
     upTabsBtn:{
         width:'33%',
     },
+    upTabsBtn50:{
+        width:'50%',
+    },
     upTabsText:{
         fontSize:17,
         color:'#fff',
