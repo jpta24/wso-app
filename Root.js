@@ -19,6 +19,7 @@ import SplashScreen from "./screens/SplashScreen";
 import DashboardScreen from "./screens/DashboardScreen";
 import TeamsScreen from "./screens/TeamsScreen";
 import ClientsScreen from "./screens/ClientsScreen";
+import NewClientScreen from "./screens/NewClientScreen";
 
 import { Feather } from '@expo/vector-icons';
 import Loading from "./components/Loading";
@@ -130,6 +131,11 @@ const Root = () => {
                                     options={({navigation,route})=>(
                                         optionsHeaderAddNew(navigation,route,'Clients')
                                     )}
+                                />
+                                <Stack.Screen
+                                    name="NewClientScreen"
+                                    component={NewClientScreen}
+                                    options={optionsDefault('New Client')}
                                 />
                             </>   
                         </>)

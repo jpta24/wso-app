@@ -1,28 +1,33 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
-import {textField} from '../utils/functions';
+import { Feather,FontAwesome } from '@expo/vector-icons';
 
-const MemberCard = ({memberData, navigation}) => {
-    // console.log(memberData.position);
+const ClientCard = ({clientData, navigation,handleChangeStatusClient}) => {
+    // console.log(clientData.position);
+    
   return (
-    <TouchableOpacity  style={styles.card} onPress={()=>navigation.navigate('ViewProfileScreen', {userID:memberData._id})}>
+    <TouchableOpacity  style={styles.card} onPress={()=>navigation.navigate('ViewClienScreen', {clientID:clientData._id})}>
         <View  style={styles.imageContainer}>
             <Image
-                source={ {uri: memberData.pictureUrl} }
+                source={ {uri: clientData.pictureUrl} }
                 style={styles.image}
             />
         </View>
         
         <View style={styles.textContainer}>
-            <Text style={styles.textName}>{memberData.fullName}</Text>
-            <Text style={styles.textPosition}>{memberData.position}</Text>
-            <Text style={styles.textRol}>{textField(memberData.rol)}</Text>
+            <Text style={styles.textName}>{clientData.clientName}</Text>
+            <Text style={styles.textPosition}>{clientData.address.country}</Text>
+            {/* <Text style={styles.textRol}>{textField(clientData.rol)}</Text> */}
         </View>
+        <TouchableOpacity onPress={()=>handleChangeStatusClient(clientData)}>
+            {!clientData.saved ? <Feather name="star" size={24} color="black" style={{paddingTop:15}} /> :
+            <FontAwesome name="star" size={24} color="black" style={{paddingTop:15}} />}
+        </TouchableOpacity>
     </TouchableOpacity>
   )
 }
 
-export default MemberCard
+export default ClientCard
 
 const styles = StyleSheet.create({
     card:{

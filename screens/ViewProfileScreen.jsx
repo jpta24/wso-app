@@ -5,6 +5,8 @@ import Layout from '../components/Layout'
 import Loading from '../components/Loading';
 import { styles } from "../styles/styles.js";
 
+import {textField} from '../utils/functions';
+
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SERVER_URL} from "@env";
@@ -58,21 +60,6 @@ const ViewProfileScreen = ({navigation,route}) => {
               })
               .catch(err=>console.log(err));
         }
-
-      const textField = (field) =>{
-        let spaceArr = [0]
-        for (let i = 1; i < field.length; i++) {
-            if (field.charAt(i) === field.charAt(i).toUpperCase()) {
-                spaceArr.push(i)
-            }    
-        }
-        let newWords =''
-        let newPos = 1
-        for (let i = 0; i < spaceArr.length; i++) {
-               newWords += field[spaceArr[i]].toUpperCase() + field.slice(spaceArr[i]+1,spaceArr[i+1]) + ' '
-        }
-        return newWords
-    }
     
       if(user) {
         return (

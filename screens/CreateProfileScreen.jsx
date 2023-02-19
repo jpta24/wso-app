@@ -149,7 +149,7 @@ const CreateProfileScreen = ({navigation}) => {
                     style={styles.textInput}
                     placeholder='Position'
                     returnKeyType='next'
-                    keyboardType='email-address'
+                    blurOnSubmit={false}
                     placeholderTextColor='#fffff'
                     onSubmitEditing={()=>{phoneRef.current.focus()}}
                     onChangeText={(text) => handleChange("position", text)}

@@ -37,7 +37,7 @@ const ClientsScreen = ({navigation}) => {
         navigation.setParams({businessID:user.businessID});
       }, []);
 
-    const [activeTab, setActiveTab] = useState('Saved')
+    const [activeTab, setActiveTab] = useState('All')
 
     const handleTabsActive = (tab) => {
         setActiveTab(tab)
@@ -47,6 +47,18 @@ const ClientsScreen = ({navigation}) => {
     const tabSavedIsActiveText = activeTab === 'Saved' ? styles.upTabActiveText : styles.upTabInactiveText
     const tabAllIsActiveText= activeTab === 'All' ? styles.upTabActiveText : styles.upTabInactiveText
 
+    const handleChangeStatusClient = async(clientData)=>{
+        const requestBody = {
+            businessID:user.businessID,
+            saved:!clientData.saved
+        };
+        const token = await AsyncStorage.getItem('authToken')
+        axios.put(`${SERVER_URL}/business/client/${clientData._id}`, requestBody, {headers: {Authorization: `Bearer ${token}`}})
+        .then(res => {
+            setClients(res.data.clients)
+          })
+      .catch(err=>console.log(err));
+    }
     if (clients) {
         return (
             <Layout>
@@ -73,6 +85,7 @@ const ClientsScreen = ({navigation}) => {
                     </View>
 
                     <ScrollView>
+                    {/* clients.map(client=><Text>a</Text>) */}
                         {clients.filter(client=>{
                         if(activeTab === 'Saved'){
                             return client.saved
@@ -89,7 +102,7 @@ const ClientsScreen = ({navigation}) => {
                             }
                         })
                         .sort((a,b)=>{return a.rol.localeCompare(b.rol) || a.clientName.localeCompare(b.clientName) })
-                        .map(client=><ClientCard key={client._id} clientData={client} navigation={navigation}/>)}
+                        .map(client=><ClientCard key={client._id} clientData={client} navigation={navigation} handleChangeStatusClient={handleChangeStatusClient}/>)}
                     </ScrollView>
                 </View>
             </Layout>
