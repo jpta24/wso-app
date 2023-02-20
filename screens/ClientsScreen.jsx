@@ -101,7 +101,7 @@ const ClientsScreen = ({navigation}) => {
                                 return elem.clientName.toLowerCase().includes(searchBox.toLowerCase())
                             }
                         })
-                        .sort((a,b)=>{return a.rol.localeCompare(b.rol) || a.clientName.localeCompare(b.clientName) })
+                        .sort((a,b)=>{return a.clientName.localeCompare(b.clientName) || a.address.country.localeCompare(b.address.country) })
                         .map(client=><ClientCard key={client._id} clientData={client} navigation={navigation} handleChangeStatusClient={handleChangeStatusClient}/>)}
                     </ScrollView>
                 </View>
